@@ -4,13 +4,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { Heading, HStack, Text } from '@chakra-ui/react'
-import { LIST_OF_STORES } from 'db/db'
+import { STORE_DB } from 'db/db'
 import { AppHeader } from 'components/AppHeader'
 
 export function getStaticProps() {
   return {
     props: {
-      stores: LIST_OF_STORES,
+      stores: STORE_DB,
     },
   }
 }
