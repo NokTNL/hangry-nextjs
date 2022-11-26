@@ -3,8 +3,9 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { Box, Flex, Heading, HStack, Text } from '@chakra-ui/react'
+import { Heading, HStack, Text } from '@chakra-ui/react'
 import { LIST_OF_STORES } from 'db/db'
+import { AppHeader } from 'components/AppHeader'
 
 export function getStaticProps() {
   return {
@@ -27,22 +28,16 @@ export default function StoresPage({
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header style={{ position: 'sticky', top: '0' }}>
-        <Flex
-          backgroundColor="teal.300"
-          h="70px"
-          align="center"
-          py="20px"
-          px="28px"
-        >
-          <Heading color="blackAlpha.800" fontSize="30px">
-            Hangry NextJS
-          </Heading>
-        </Flex>
-      </header>
+      <AppHeader />
       <main>
-        <Heading fontWeight="normal" color="blackAlpha.800" px="16px" py="10px">
-          Stores
+        <Heading
+          fontWeight="normal"
+          color="gray.600"
+          px="24px"
+          py="20px"
+          fontSize="24px"
+        >
+          Pick a store:
         </Heading>
         <ul>
           {stores.map(store => (
