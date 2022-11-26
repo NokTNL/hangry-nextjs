@@ -1,3 +1,4 @@
+import { Card, CardBody, Heading, HStack, Spacer, Text } from '@chakra-ui/react'
 import { AppHeader } from 'components/AppHeader'
 import { STORE_DB } from 'db/db'
 import {
@@ -5,6 +6,7 @@ import {
   GetStaticPropsContext,
   GetStaticPropsResult,
 } from 'next'
+import Image from 'next/image'
 
 type ParamsType = {
   storeId: string
@@ -17,6 +19,7 @@ export type StaticPropsType = {
     id: string
     itemName: string
     price: number
+    photo: string
   }[]
 }
 
@@ -62,12 +65,37 @@ export const getStaticProps = (
   }
 }
 
-export default function StoreMenuPage({ menu, storeId }: StaticPropsType) {
+export default function StoreMenuPage({ menu, storeName }: StaticPropsType) {
   return (
     <>
       <AppHeader />
-      <div>{`id: ${storeId}`}</div>
-      {JSON.stringify(menu)}
+      <Heading
+        fontWeight="normal"
+        color="gray.600"
+        px="24px"
+        py="20px"
+        fontSize="24px"
+      >
+        {storeName}
+      </Heading>
+      {menu.map(item => (
+        <Card key={item.id} mx="20px" my="15px">
+          <CardBody>
+            <HStack spacing="24px">
+              <Image
+                src={item.photo}
+                alt={item.itemName}
+                width={60}
+                height={60}
+              />
+              <Text fontSize="22px" color="blackAlpha.800" w="145px">
+                {item.itemName}
+              </Text>
+              <Text justifySelf="flex-end">£{item.price.toFixed(2)}</Text>
+            </HStack>
+          </CardBody>
+        </Card>
+      ))}
     </>
   )
 }

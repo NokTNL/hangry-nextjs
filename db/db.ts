@@ -6,13 +6,15 @@ export const STORE_DB = [
     menu: [
       {
         id: 'item1',
-        itemName: 'Cappucino',
+        itemName: 'Cappuccino',
         price: 3.5,
+        photo: '/img/starbucks-cappuccino.jpeg',
       },
       {
         id: 'item2',
         itemName: 'Expresso',
         price: 2,
+        photo: '/img/starbucks-expresso.webp',
       },
     ],
   },

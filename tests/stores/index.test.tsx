@@ -10,19 +10,22 @@ describe('/stores page - Unit tests', () => {
   test('page renders list of links for stores correctly', () => {
     const mockListOfStores = [
       {
-        id: 1,
+        id: '1',
         logoImage: '/img/starbucks.svg',
         name: 'Starbucks',
+        menu: [],
       },
       {
-        id: 2,
+        id: '2',
         logoImage: '/img/burger-king.svg',
         name: 'Burger King',
+        menu: [],
       },
       {
-        id: 3,
+        id: '3',
         logoImage: '/img/mcdonalds.svg',
         name: 'McDonalds',
+        menu: [],
       },
     ]
     render(<StoresPage stores={mockListOfStores} />)

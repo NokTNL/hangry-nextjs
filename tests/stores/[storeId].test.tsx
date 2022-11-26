@@ -1,4 +1,5 @@
-import {
+import { render, screen } from '@testing-library/react'
+import StoreMenuPage, {
   getStaticPaths,
   getStaticProps,
   StaticPropsType,
@@ -14,11 +15,13 @@ const MOCK_STORE_DB = [
         id: 'item1',
         itemName: 'Cappucino',
         price: 3.5,
+        photo: '/food-img-url-1',
       },
       {
         id: 'item2',
         itemName: 'Expresso',
         price: 2,
+        photo: '/food-img-url-2',
       },
     ],
   },
@@ -67,11 +70,13 @@ describe('/stores/[storeId] page - Unit tests', () => {
           id: 'item1',
           itemName: 'Cappucino',
           price: 3.5,
+          photo: '/food-img-url-1',
         },
         {
           id: 'item2',
           itemName: 'Expresso',
           price: 2,
+          photo: '/food-img-url-2',
         },
       ],
     }
@@ -88,5 +93,36 @@ describe('/stores/[storeId] page - Unit tests', () => {
     expect(() => {
       getStaticProps(MOCK_CONTEXT, { mockDB: MOCK_STORE_DB })
     }).toThrow()
+  })
+  test('Renders the menu items details', () => {
+    const MOCK_PAGE_PROPS = {
+      storeId: '1',
+      storeName: 'Starbucks',
+      menu: [
+        {
+          id: 'item1',
+          itemName: 'Cappucino',
+          price: 3.5,
+          photo: '/food-img-url-1',
+        },
+        {
+          id: 'item2',
+          itemName: 'Expresso',
+          price: 2,
+          photo: '/food-img-url-2',
+        },
+      ],
+    }
+
+    render(<StoreMenuPage {...MOCK_PAGE_PROPS} />)
+    // Item names
+    expect(screen.getByText(/Cappucino/i)).toBeInTheDocument()
+    expect(screen.getByText(/Expresso/i)).toBeInTheDocument()
+    // Item photos
+    expect(screen.getByRole('img', { name: /Cappucino/i })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: /Expresso/i })).toBeInTheDocument()
+    // Item prices
+    expect(screen.getByText(/£3\.50/)).toBeInTheDocument()
+    expect(screen.getByText(/£2\.00/)).toBeInTheDocument()
   })
 })

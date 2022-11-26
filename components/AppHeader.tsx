@@ -18,10 +18,12 @@ export function AppHeader({}) {
         px="28px"
       >
         <Heading color="blackAlpha.800" fontSize="26px">
-          Hangry{' '}
-          <Text as="span" color="white">
-            NextJS
-          </Text>
+          <Link href="/stores">
+            Hangry{' '}
+            <Text as="span" color="white">
+              NextJS
+            </Text>
+          </Link>
         </Heading>
         <Spacer />
         <Link href="/cart">
