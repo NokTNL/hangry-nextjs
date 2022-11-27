@@ -55,7 +55,12 @@ export default function StoresPage({
                 <CardBody>
                   <HStack spacing="30px">
                     <Square size="80px" position="relative">
-                      <Image src={store.logoImage} alt="" fill />
+                      <Image
+                        src={store.logoImage}
+                        alt=""
+                        fill
+                        sizes="(max-width: 768px) 200px, 550px"
+                      />
                     </Square>
 
                     <Text

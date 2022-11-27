@@ -93,7 +93,12 @@ export default function StoreMenuPage({ menu, storeName }: StaticPropsType) {
             <CardBody>
               <HStack>
                 <Square size="60px" position="relative">
-                  <Image src={item.photo} alt={item.itemName} fill />
+                  <Image
+                    src={item.photo}
+                    alt={item.itemName}
+                    fill
+                    sizes="(max-width: 768px) 200px, 550px"
+                  />
                 </Square>
                 <Text
                   fontSize="22px"
