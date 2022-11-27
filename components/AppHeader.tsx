@@ -1,6 +1,16 @@
-import { Flex, Heading, Spacer, Text } from '@chakra-ui/react'
+import {
+  Center,
+  Flex,
+  Heading,
+  HStack,
+  Icon,
+  Spacer,
+  Text,
+} from '@chakra-ui/react'
 import Image from 'next/image'
 import Link from 'next/link'
+import CartSVG from 'assets/cart.svg'
+import NextJsPNG from 'assets/nextjs.png'
 
 export function AppHeader({}) {
   return (
@@ -17,23 +27,18 @@ export function AppHeader({}) {
         py="20px"
         px="28px"
       >
-        <Heading color="blackAlpha.800" fontSize="26px">
-          <Link href="/stores">
-            Hangry{' '}
-            <Text as="span" color="white">
-              NextJS
+        <Heading>
+          <HStack as={Link} href="/stores">
+            <Text fontWeight="light" fontSize="26px">
+              Hangry
             </Text>
-          </Link>
+            <Image src={NextJsPNG} alt="NextJS" height={40} priority />
+          </HStack>
         </Heading>
         <Spacer />
-        <Link href="/cart">
-          <Image
-            src="/icons/cart.svg"
-            alt="shopping cart"
-            width={35}
-            height={35}
-          />
-        </Link>
+        <Center as={Link} href="/cart">
+          <Icon as={CartSVG} fontSize="35px" color="white" />
+        </Center>
       </Flex>
     </header>
   )

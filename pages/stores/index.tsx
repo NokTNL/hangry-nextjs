@@ -3,7 +3,16 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { Card, CardBody, Heading, HStack, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Card,
+  CardBody,
+  Heading,
+  HStack,
+  Square,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import { STORE_DB } from 'db/db'
 import { AppHeader } from 'components/AppHeader'
 
@@ -39,18 +48,15 @@ export default function StoresPage({
         >
           Pick a store:
         </Heading>
-        <ul>
+        <VStack as="ul" alignItems="stretch" p="20px" spacing="15px">
           {stores.map(store => (
-            <li key={store.id}>
-              <Card as={Link} mx="20px" my="15px" href={`/stores/${store.id}`}>
+            <Box as="li" key={store.id} listStyleType="none">
+              <Card as={Link} href={`/stores/${store.id}`}>
                 <CardBody>
                   <HStack spacing="30px">
-                    <Image
-                      src={store.logoImage}
-                      alt=""
-                      width={80}
-                      height={80}
-                    />
+                    <Square size="80px" position="relative">
+                      <Image src={store.logoImage} alt="" fill />
+                    </Square>
 
                     <Text
                       fontSize="22px"
@@ -62,9 +68,9 @@ export default function StoresPage({
                   </HStack>
                 </CardBody>
               </Card>
-            </li>
+            </Box>
           ))}
-        </ul>
+        </VStack>
       </main>
     </>
   )
