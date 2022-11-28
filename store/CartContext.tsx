@@ -63,15 +63,34 @@ export function cartReducer(
   switch (action.type) {
     case 'ADD_ITEM': {
       const newItem = action.payload
+
+      const doesItemAlreadyExist = state.items.some(
+        item => item.item.id === newItem.item.id
+      )
+
+      const newArrayOfItems = doesItemAlreadyExist
+        ? state.items.map(item => {
+            if (item.item.id === newItem.item.id) {
+              return {
+                ...item,
+                quantity: item.quantity + 1,
+              }
+            } else {
+              return item
+            }
+          })
+        : // New item
+          [
+            ...state.items,
+            {
+              ...newItem,
+              quantity: 1,
+            },
+          ]
+
       return {
         ...state,
-        items: [
-          ...state.items,
-          {
-            ...newItem,
-            quantity: 1,
-          },
-        ],
+        items: newArrayOfItems,
       }
     }
   }

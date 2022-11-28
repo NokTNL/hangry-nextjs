@@ -5,7 +5,7 @@ import StoreMenuPage, {
   getStaticProps,
   StaticPropsType,
 } from 'pages/stores/[storeId]'
-import { CartProvider, cartReducer } from 'store/CartContext'
+import { CartProvider } from 'store/CartContext'
 
 const MOCK_STORE_DB = [
   {
@@ -136,40 +136,5 @@ describe('/stores/[storeId] page - Unit tests', () => {
         },
       },
     })
-  })
-  test('Reducer add one item  when ADD_ITEM action is dispatched', () => {
-    const MOCK_INIT_STATE = {
-      items: [],
-    }
-    const MOCK_ACTION = {
-      type: 'ADD_ITEM' as const,
-      payload: {
-        store: {
-          id: '1',
-          name: 'Starbucks',
-        },
-        item: {
-          id: 'item1',
-          name: 'Cappucino',
-          price: 3.5,
-        },
-      },
-    }
-    const newState = cartReducer(MOCK_INIT_STATE, MOCK_ACTION)
-
-    expect(newState.items).toEqual([
-      {
-        store: {
-          id: '1',
-          name: 'Starbucks',
-        },
-        item: {
-          id: 'item1',
-          name: 'Cappucino',
-          price: 3.5,
-        },
-        quantity: 1,
-      },
-    ])
   })
 })
