@@ -16,20 +16,23 @@ import {
   GetStaticPropsResult,
 } from 'next'
 import Image from 'next/image'
+import { useCart } from 'store/CartContext'
 
 type ParamsType = {
   storeId: string
 }
 
+type MenuItemType = {
+  id: string
+  itemName: string
+  price: number
+  photo: string
+}
+
 export type StaticPropsType = {
   storeId: string
   storeName: string
-  menu: {
-    id: string
-    itemName: string
-    price: number
-    photo: string
-  }[]
+  menu: MenuItemType[]
 }
 
 export const getStaticPaths = (
@@ -74,7 +77,29 @@ export const getStaticProps = (
   }
 }
 
-export default function StoreMenuPage({ menu, storeName }: StaticPropsType) {
+export default function StoreMenuPage({
+  menu,
+  storeName,
+  storeId,
+}: StaticPropsType) {
+  const { dispatch: cartDispatch } = useCart()
+  const handleAddItem = (item: MenuItemType) => {
+    cartDispatch({
+      type: 'ADD_ITEM',
+      payload: {
+        store: {
+          id: storeId,
+          name: storeName,
+        },
+        item: {
+          id: item.id,
+          name: item.itemName,
+          price: item.price,
+        },
+      },
+    })
+  }
+
   return (
     <>
       <AppHeader />
@@ -89,7 +114,14 @@ export default function StoreMenuPage({ menu, storeName }: StaticPropsType) {
       </Heading>
       <VStack as="ul" alignItems="stretch" p="20px" spacing="15px">
         {menu.map(item => (
-          <Card key={item.id} as="li" role="button">
+          <Card
+            key={item.id}
+            as="li"
+            role="button"
+            onClick={() => {
+              handleAddItem(item)
+            }}
+          >
             <CardBody>
               <HStack>
                 <Square size="60px" position="relative">
