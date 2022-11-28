@@ -6,6 +6,7 @@ import {
   Spacer,
   Square,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react'
 import { AppHeader } from 'components/AppHeader'
@@ -83,6 +84,8 @@ export default function StoreMenuPage({
   storeId,
 }: StaticPropsType) {
   const { dispatch: cartDispatch } = useCart()
+  const toast = useToast()
+
   const handleAddItem = (item: MenuItemType) => {
     cartDispatch({
       type: 'ADD_ITEM',
@@ -97,6 +100,11 @@ export default function StoreMenuPage({
           price: item.price,
         },
       },
+    })
+    toast({
+      position: 'bottom-right',
+      status: 'success',
+      description: `${item.itemName} added to cart`,
     })
   }
 
