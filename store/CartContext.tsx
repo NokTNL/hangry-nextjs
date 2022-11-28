@@ -1,45 +1,38 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { createContext, PropsWithChildren, useReducer } from 'react'
-
-export type CartItemType = {
-  store: {
-    id: string
-    name: string
-  }
-  item: {
-    id: string
-    name: string
-    price: number
-  }
-  quantity: number
-}
+import {
+  CartActionTypes,
+  CartContextState,
+  CartProviderProps,
+  CONTEXT_DEFAULT_VALUE,
+  LOCAL_STORAGE_KEY,
+} from './constants'
 
 /**
  * Context
  */
-type CartContextState = typeof DEFAULT_VALUE.state
 
-const DEFAULT_VALUE = {
-  state: {
-    items: [] as CartItemType[],
-  },
-  dispatch: (action: CartActionTypes) => {},
-}
-
-export const CartContext = createContext(DEFAULT_VALUE)
-
-type CartProviderProps = {
-  mockContextValue?: Partial<typeof DEFAULT_VALUE>
-}
+export const CartContext = createContext(CONTEXT_DEFAULT_VALUE)
 
 export function CartProvider({
   children,
   mockContextValue,
 }: PropsWithChildren & CartProviderProps) {
-  const initialState = mockContextValue?.state ?? DEFAULT_VALUE.state
+  const initialState = mockContextValue?.state ?? CONTEXT_DEFAULT_VALUE.state
   const mockDispatch = mockContextValue?.dispatch
 
   const [state, dispatch] = useReducer(cartReducer, initialState)
+
+  // Initial Sync from Local Storage
+  useEffect(() => {
+    if (window?.localStorage) {
+      const storedStateString = localStorage.getItem(LOCAL_STORAGE_KEY)
+      if (storedStateString === null) return
+      const storedState = JSON.parse(storedStateString)
+
+      dispatch({ type: 'INITIAL_SYNC', payload: storedState })
+    }
+  }, [])
 
   return (
     <CartContext.Provider value={{ state, dispatch: mockDispatch ?? dispatch }}>
@@ -51,16 +44,17 @@ export function CartProvider({
 /**
  * Reducer
  */
-type CartActionTypes = {
-  type: 'ADD_ITEM'
-  payload: Omit<CartItemType, 'quantity'>
-}
 
 export function cartReducer(
   state: CartContextState,
   action: CartActionTypes
 ): CartContextState {
+  let newState = state
+
   switch (action.type) {
+    case 'INITIAL_SYNC': {
+      return action.payload
+    }
     case 'ADD_ITEM': {
       const newItem = action.payload
 
@@ -88,12 +82,16 @@ export function cartReducer(
             },
           ]
 
-      return {
+      newState = {
         ...state,
         items: newArrayOfItems,
       }
     }
   }
+
+  // Sync with Local Storage
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newState))
+  return newState
 }
 
 /**
