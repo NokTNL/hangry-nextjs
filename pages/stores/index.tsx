@@ -1,20 +1,10 @@
 import { InferGetStaticPropsType } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-import Link from 'next/link'
+import { StoreItem } from './../../components/stores/StoreItem'
 
-import {
-  Box,
-  Card,
-  CardBody,
-  Heading,
-  HStack,
-  Square,
-  Text,
-  VStack,
-} from '@chakra-ui/react'
-import { STORE_DB } from 'db/db'
+import { Heading, VStack } from '@chakra-ui/react'
 import { AppHeader } from 'components/AppHeader'
+import { STORE_DB } from 'db/db'
 
 export function getStaticProps() {
   return {
@@ -50,30 +40,7 @@ export default function StoresPage({
         </Heading>
         <VStack as="ul" alignItems="stretch" p="20px" spacing="15px">
           {stores.map(store => (
-            <Box as="li" key={store.id} listStyleType="none">
-              <Card as={Link} href={`/stores/${store.id}`}>
-                <CardBody>
-                  <HStack spacing="30px">
-                    <Square size="80px" position="relative">
-                      <Image
-                        src={store.logoImage}
-                        alt=""
-                        fill
-                        sizes="(max-width: 768px) 200px, 550px"
-                      />
-                    </Square>
-
-                    <Text
-                      fontSize="22px"
-                      fontWeight="semibold"
-                      color="blackAlpha.800"
-                    >
-                      {store.name}
-                    </Text>
-                  </HStack>
-                </CardBody>
-              </Card>
-            </Box>
+            <StoreItem store={store} key={store.id} />
           ))}
         </VStack>
       </main>

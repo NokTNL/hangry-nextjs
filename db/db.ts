@@ -31,3 +31,5 @@ export const STORE_DB = [
     menu: [],
   },
 ]
+
+export type StoreType = typeof STORE_DB[number]

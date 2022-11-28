@@ -1,14 +1,4 @@
-import {
-  Card,
-  CardBody,
-  Heading,
-  HStack,
-  Spacer,
-  Square,
-  Text,
-  useToast,
-  VStack,
-} from '@chakra-ui/react'
+import { Heading, VStack } from '@chakra-ui/react'
 import { AppHeader } from 'components/AppHeader'
 import { STORE_DB } from 'db/db'
 import {
@@ -16,14 +6,13 @@ import {
   GetStaticPropsContext,
   GetStaticPropsResult,
 } from 'next'
-import Image from 'next/image'
-import { useCart } from 'store/CartContext'
+import { MenuItem } from '../../components/stores/MenuItem'
 
 type ParamsType = {
   storeId: string
 }
 
-type MenuItemType = {
+export type MenuItemType = {
   id: string
   itemName: string
   price: number
@@ -83,31 +72,6 @@ export default function StoreMenuPage({
   storeName,
   storeId,
 }: StaticPropsType) {
-  const { dispatch: cartDispatch } = useCart()
-  const toast = useToast()
-
-  const handleAddItem = (item: MenuItemType) => {
-    cartDispatch({
-      type: 'ADD_ITEM',
-      payload: {
-        store: {
-          id: storeId,
-          name: storeName,
-        },
-        item: {
-          id: item.id,
-          name: item.itemName,
-          price: item.price,
-        },
-      },
-    })
-    toast({
-      position: 'bottom-right',
-      status: 'success',
-      description: `${item.itemName} added to cart`,
-    })
-  }
-
   return (
     <>
       <AppHeader />
@@ -122,36 +86,11 @@ export default function StoreMenuPage({
       </Heading>
       <VStack as="ul" alignItems="stretch" p="20px" spacing="15px">
         {menu.map(item => (
-          <Card
+          <MenuItem
+            item={item}
             key={item.id}
-            as="li"
-            role="button"
-            onClick={() => {
-              handleAddItem(item)
-            }}
-          >
-            <CardBody>
-              <HStack>
-                <Square size="60px" position="relative">
-                  <Image
-                    src={item.photo}
-                    alt={item.itemName}
-                    fill
-                    sizes="(max-width: 768px) 200px, 550px"
-                  />
-                </Square>
-                <Text
-                  fontSize="22px"
-                  color="blackAlpha.800"
-                  w="0" // To make flexGrow work
-                  flexGrow="1"
-                >
-                  {item.itemName}
-                </Text>
-                <Text justifySelf="flex-end">£{item.price.toFixed(2)}</Text>
-              </HStack>
-            </CardBody>
-          </Card>
+            storeDetails={{ name: storeName, id: storeId }}
+          />
         ))}
       </VStack>
     </>
