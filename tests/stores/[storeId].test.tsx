@@ -6,6 +6,7 @@ import StoreMenuPage, {
   StaticPropsType,
 } from 'pages/stores/[storeId]'
 import { CartProvider } from 'store/CartContext'
+import { CONTEXT_DEFAULT_VALUE } from 'store/constants'
 
 const MOCK_STORE_DB = [
   {
@@ -109,20 +110,20 @@ describe('/stores/[storeId] page - Unit tests', () => {
     expect(screen.getByText(/£2\.00/)).toBeInTheDocument()
   })
   test('Dispatch add item action when menu item clicked', async () => {
-    const MOCK_CART_CONTEXT = {
+    const spyContextValues = {
       dispatch: jest.fn(),
     }
 
     const user = userEvent.setup()
     render(
-      <CartProvider mockContextValue={MOCK_CART_CONTEXT}>
+      <CartProvider spyContextValues={spyContextValues}>
         <StoreMenuPage {...MOCK_PAGE_PROPS} />
       </CartProvider>
     )
 
     await user.click(screen.getByText(/Cappucino/))
 
-    expect(MOCK_CART_CONTEXT.dispatch).toHaveBeenCalledWith({
+    expect(spyContextValues.dispatch).toHaveBeenCalledWith({
       type: 'ADD_ITEM',
       payload: {
         store: {

@@ -16,10 +16,10 @@ export const CartContext = createContext(CONTEXT_DEFAULT_VALUE)
 
 export function CartProvider({
   children,
-  mockContextValue,
+  initialState: initialStateFromProps,
+  spyContextValues,
 }: PropsWithChildren & CartProviderProps) {
-  const initialState = mockContextValue?.state ?? CONTEXT_DEFAULT_VALUE.state
-  const mockDispatch = mockContextValue?.dispatch
+  const initialState = initialStateFromProps ?? CONTEXT_DEFAULT_VALUE.state
 
   const [state, dispatch] = useReducer(cartReducer, initialState)
 
@@ -34,8 +34,20 @@ export function CartProvider({
     }
   }, [])
 
+  // Spying context's value
+  useEffect(() => {
+    if (spyContextValues?.state) spyContextValues.state = state
+  })
+  // Spy on dispatch
+  const contextDispatch = spyContextValues?.dispatch
+    ? (action: CartActionTypes) => {
+        dispatch(action)
+        spyContextValues.dispatch!(action)
+      }
+    : dispatch
+
   return (
-    <CartContext.Provider value={{ state, dispatch: mockDispatch ?? dispatch }}>
+    <CartContext.Provider value={{ state, dispatch: contextDispatch }}>
       {children}
     </CartContext.Provider>
   )

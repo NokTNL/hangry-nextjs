@@ -17,7 +17,11 @@ export type CartItemType = {
 export type CartContextState = typeof CONTEXT_DEFAULT_VALUE.state
 
 export type CartProviderProps = {
-  mockContextValue?: Partial<typeof CONTEXT_DEFAULT_VALUE>
+  initialState?: CartContextState
+  spyContextValues?: {
+    state?: CartContextState
+    dispatch?: (action: CartActionTypes) => void
+  }
 }
 
 export type CartActionTypes =

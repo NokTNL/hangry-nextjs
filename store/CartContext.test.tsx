@@ -1,6 +1,6 @@
 import { render, waitFor } from '@testing-library/react'
 import { CartProvider, cartReducer } from './CartContext'
-import { LOCAL_STORAGE_KEY } from './constants'
+import { CONTEXT_DEFAULT_VALUE, LOCAL_STORAGE_KEY } from './constants'
 
 const MOCK_EMPTY_INIT_STATE = {
   items: [],
@@ -54,7 +54,7 @@ describe('CartContext reducer', () => {
   beforeEach(() => {
     localStorage.clear()
   })
-  test('Add one item when ADD_ITEM action is dispatched', () => {
+  test('Add one item when ADD_ITEM action is passed into cart reducer', () => {
     const newState = cartReducer(
       MOCK_EMPTY_INIT_STATE,
       ADD_ITEM_ACTION_CAPPUNICCINO
@@ -75,7 +75,7 @@ describe('CartContext reducer', () => {
       },
     ])
   })
-  test(`Only increment item's quantity item already exists`, () => {
+  test(`Only increment item's quantity if item already exists`, () => {
     const newState = cartReducer(
       MOCK_SOME_ITEMS_INIT_STATE,
       ADD_ITEM_ACTION_CAPPUNICCINO
@@ -108,7 +108,7 @@ describe('CartContext reducer', () => {
       },
     ])
   })
-  test(`Store cart state in local storage when adding items`, () => {
+  test(`Save cart state in local storage when adding items`, () => {
     // Mocking/Spying directly on localStorage is NOT possible with jsdom: https://stackoverflow.com/a/54157998
     // !!! BUT you can call localStorage directly in your test code!
 
@@ -122,8 +122,8 @@ describe('CartContext reducer', () => {
     )
   })
   test(`Cart state synced from local storage initially`, () => {
-    const MOCK_CART_CONTEXT = {
-      dispatch: jest.fn(),
+    const spyContextValues = {
+      state: {} as any,
     }
 
     // Mocking that the local storage has been pre-populated with cart data
@@ -132,13 +132,8 @@ describe('CartContext reducer', () => {
       JSON.stringify(MOCK_SOME_ITEMS_INIT_STATE)
     )
 
-    render(<CartProvider mockContextValue={MOCK_CART_CONTEXT} />)
+    render(<CartProvider spyContextValues={spyContextValues} />)
 
-    waitFor(() => {
-      expect(MOCK_CART_CONTEXT.dispatch).toHaveBeenCalledWith(
-        'INITIAL_SYNC',
-        MOCK_SOME_ITEMS_INIT_STATE
-      )
-    })
+    expect(spyContextValues.state).toEqual(MOCK_SOME_ITEMS_INIT_STATE)
   })
 })
