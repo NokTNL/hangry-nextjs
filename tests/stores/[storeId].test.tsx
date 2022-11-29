@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { getByRole, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import StoreMenuPage, {
   getStaticPaths,
@@ -96,17 +96,22 @@ describe('/stores/[storeId] page - Unit tests', () => {
       getStaticProps(MOCK_CONTEXT, { mockDB: MOCK_STORE_DB })
     }).toThrow()
   })
-  test('Renders the menu items details', () => {
+  test('Renders the menu items details as buttons', () => {
     render(<StoreMenuPage {...MOCK_PAGE_PROPS} />)
-    // Item names
-    expect(screen.getByText(/Cappucino/i)).toBeInTheDocument()
-    expect(screen.getByText(/Expresso/i)).toBeInTheDocument()
+
+    const capuccinoButton = screen.getByRole('button', { name: /Cappucino/i })
+    const expressoButton = screen.getByRole('button', { name: /Expresso/i })
+
     // Item photos
-    expect(screen.getByRole('img', { name: /Cappucino/i })).toBeInTheDocument()
-    expect(screen.getByRole('img', { name: /Expresso/i })).toBeInTheDocument()
+    expect(
+      within(capuccinoButton).getByRole('img').getAttribute('src')
+    ).toMatch(/food-img-url-1/)
+    expect(within(expressoButton).getByRole('img').getAttribute('src')).toMatch(
+      /food-img-url-2/
+    )
     // Item prices
-    expect(screen.getByText(/£3\.50/)).toBeInTheDocument()
-    expect(screen.getByText(/£2\.00/)).toBeInTheDocument()
+    expect(within(capuccinoButton).getByText(/£3\.50/)).toBeInTheDocument()
+    expect(within(expressoButton).getByText(/£2\.00/)).toBeInTheDocument()
   })
   test('Dispatch add item action when menu item clicked', async () => {
     const spyContextValues = {

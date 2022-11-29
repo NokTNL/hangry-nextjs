@@ -57,7 +57,7 @@ export function MenuItem({ item, storeDetails }: MenuItemProps) {
           <Square size="60px" position="relative">
             <Image
               src={item.photo}
-              alt={item.itemName}
+              alt=""
               fill
               sizes="(max-width: 768px) 200px, 550px"
             />
