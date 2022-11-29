@@ -3,6 +3,11 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
 
+  // ESLint
+  eslint: {
+    dirs: ['pages', 'components', 'store'],
+  },
+
   // SVGR
   webpack(config) {
     config.module.rules.push({

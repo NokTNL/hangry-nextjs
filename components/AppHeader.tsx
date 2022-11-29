@@ -12,7 +12,7 @@ import Link from 'next/link'
 import CartSVG from 'assets/cart.svg'
 import NextJsPNG from 'assets/nextjs.png'
 
-export function AppHeader({}) {
+export function AppHeader() {
   return (
     <header
       style={{
