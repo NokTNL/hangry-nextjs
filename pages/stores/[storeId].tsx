@@ -1,5 +1,4 @@
 import { Heading, VStack } from '@chakra-ui/react'
-import { AppHeader } from 'components/AppHeader'
 import { STORE_DB } from 'db/db'
 import {
   GetStaticPathsResult,
@@ -51,7 +50,10 @@ export const getStaticProps = (
 ): GetStaticPropsResult<StaticPropsType> => {
   const storeDB = testUtils?.mockDB ?? STORE_DB
 
-  const targetStoreId = context.params?.storeId!
+  const targetStoreId = context.params?.storeId
+  if (!targetStoreId) {
+    throw Error(`URL does not have [storeId] param`)
+  }
 
   const store = storeDB.find(store => store.id === targetStoreId)
   if (!store) {

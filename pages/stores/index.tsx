@@ -3,7 +3,6 @@ import Head from 'next/head'
 import { StoreItem } from './../../components/stores/StoreItem'
 
 import { Heading, VStack } from '@chakra-ui/react'
-import { AppHeader } from 'components/AppHeader'
 import { STORE_DB } from 'db/db'
 
 export function getStaticProps() {
