@@ -74,7 +74,6 @@ export default function StoreMenuPage({
 }: StaticPropsType) {
   return (
     <>
-      <AppHeader />
       <Heading
         fontWeight="normal"
         color="gray.600"

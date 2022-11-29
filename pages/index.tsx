@@ -2,6 +2,14 @@ import { Heading, Center, Button, VStack, Text } from '@chakra-ui/react'
 import Head from 'next/head'
 import Link from 'next/link'
 
+export function getStaticProps() {
+  return {
+    props: {
+      hideAppHeader: true,
+    },
+  }
+}
+
 export default function Home() {
   return (
     <>

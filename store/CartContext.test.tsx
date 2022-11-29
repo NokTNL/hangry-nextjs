@@ -1,6 +1,6 @@
-import { render, waitFor } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { CartProvider, cartReducer } from './CartContext'
-import { CONTEXT_DEFAULT_VALUE, LOCAL_STORAGE_KEY } from './constants'
+import { LOCAL_STORAGE_KEY } from './constants'
 
 const MOCK_EMPTY_INIT_STATE = {
   items: [],

@@ -27,7 +27,6 @@ export default function StoresPage({
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <AppHeader />
       <main>
         <Heading
           fontWeight="normal"

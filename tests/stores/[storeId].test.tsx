@@ -6,7 +6,6 @@ import StoreMenuPage, {
   StaticPropsType,
 } from 'pages/stores/[storeId]'
 import { CartProvider } from 'store/CartContext'
-import { CONTEXT_DEFAULT_VALUE } from 'store/constants'
 
 const MOCK_STORE_DB = [
   {
