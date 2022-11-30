@@ -8,8 +8,8 @@ import {
 } from '@chakra-ui/react'
 import Image from 'next/image'
 import { MenuItemType } from 'pages/stores/[storeId]'
-import React from 'react'
-import { useCart } from 'store/CartContext'
+import { addItemSynced } from 'store/cartSlice'
+import { useAppDispatch } from 'store/hooks'
 
 type MenuItemProps = {
   item: MenuItemType
@@ -20,13 +20,12 @@ type MenuItemProps = {
 }
 
 export function MenuItem({ item, storeDetails }: MenuItemProps) {
-  const { dispatch: cartDispatch } = useCart()
+  const dispatch = useAppDispatch()
   const toast = useToast()
 
   const handleAddItem = (item: MenuItemType) => {
-    cartDispatch({
-      type: 'ADD_ITEM',
-      payload: {
+    dispatch(
+      addItemSynced({
         store: {
           id: storeDetails.id,
           name: storeDetails.name,
@@ -36,8 +35,9 @@ export function MenuItem({ item, storeDetails }: MenuItemProps) {
           name: item.itemName,
           price: item.price,
         },
-      },
-    })
+      })
+    )
+
     toast({
       position: 'bottom-right',
       status: 'success',

@@ -1,11 +1,12 @@
-import { render, screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import StoreMenuPage, {
   getStaticPaths,
   getStaticProps,
   StaticPropsType,
 } from 'pages/stores/[storeId]'
-import { CartProvider } from 'store/CartContext'
+import { addItemSynced, cartSlice } from 'store/cartSlice'
+import { customRender } from '__mocks__/customRender'
 
 const MOCK_STORE_DB = [
   {
@@ -97,7 +98,7 @@ describe('/stores/[storeId] page - Unit tests', () => {
     }).toThrow()
   })
   test('Renders the menu items details as buttons', () => {
-    render(<StoreMenuPage {...MOCK_PAGE_PROPS} />)
+    customRender(<StoreMenuPage {...MOCK_PAGE_PROPS} />)
 
     const capuccinoButton = screen.getByRole('button', { name: /Cappucino/i })
     const expressoButton = screen.getByRole('button', { name: /Expresso/i })
@@ -114,31 +115,30 @@ describe('/stores/[storeId] page - Unit tests', () => {
     expect(within(expressoButton).getByText(/£2\.00/)).toBeInTheDocument()
   })
   test('Dispatch add item action when menu item clicked', async () => {
-    const spyContextValues = {
-      dispatch: jest.fn(),
-    }
-
     const user = userEvent.setup()
-    render(
-      <CartProvider spyContextValues={spyContextValues}>
-        <StoreMenuPage {...MOCK_PAGE_PROPS} />
-      </CartProvider>
-    )
+
+    const { spyDispatch } = customRender(<StoreMenuPage {...MOCK_PAGE_PROPS} />)
 
     await user.click(screen.getByText(/Cappucino/))
 
-    expect(spyContextValues.dispatch).toHaveBeenCalledWith({
-      type: 'ADD_ITEM',
-      payload: {
-        store: {
-          id: '1',
-          name: 'Starbucks',
-        },
-        item: {
-          id: 'item1',
-          name: 'Cappucino',
-          price: 3.5,
-        },
+    // Below is expecting the corresponding thunk action is dispatched
+    // TODO: make a custom matcher for this
+    const dispatchedThunkAction = await spyDispatch.mock.results[0].value
+
+    expect(dispatchedThunkAction.type).toMatch(
+      new RegExp(
+        `${addItemSynced.fulfilled}|${addItemSynced.pending}|${addItemSynced.rejected}`
+      )
+    )
+    expect(dispatchedThunkAction.meta.arg).toEqual({
+      store: {
+        id: '1',
+        name: 'Starbucks',
+      },
+      item: {
+        id: 'item1',
+        name: 'Cappucino',
+        price: 3.5,
       },
     })
   })

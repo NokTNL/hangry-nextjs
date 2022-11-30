@@ -30,9 +30,6 @@ describe('/stores page - Unit tests', () => {
     ]
     render(<StoresPage stores={mockListOfStores} />)
 
-    expect(
-      screen.getAllByRole('link', { name: /Starbucks|Burger King|McDonalds/i })
-    ).toHaveLength(3)
     expect(screen.getByRole('link', { name: 'Starbucks' })).toHaveAttribute(
       'href',
       '/stores/1'
