@@ -1,6 +1,5 @@
-import React from 'react'
 import { createmockReduxStore, customRender } from '__mocks__/customRender'
-import { addItemSynced, cartSlice } from './cartSlice'
+import { addItemSynced } from './cartSlice'
 import { LOCAL_STORAGE_KEY } from './constants'
 
 const MOCK_EMPTY_INIT_STATE = {
