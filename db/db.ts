@@ -33,3 +33,5 @@ export const STORE_DB = [
 ]
 
 export type StoreType = typeof STORE_DB[number]
+
+export type MenuItemType = StoreType['menu'][number]

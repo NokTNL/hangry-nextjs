@@ -140,6 +140,7 @@ describe('/stores/[storeId] page - Unit tests', () => {
           id: 'item1',
           name: 'Cappucino',
           price: 3.5,
+          photo: '/food-img-url-1',
         },
       },
     })

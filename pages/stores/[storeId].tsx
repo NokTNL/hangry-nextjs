@@ -1,5 +1,5 @@
 import { Heading, VStack } from '@chakra-ui/react'
-import { STORE_DB } from 'db/db'
+import { MenuItemType, STORE_DB } from 'db/db'
 import {
   GetStaticPathsResult,
   GetStaticPropsContext,
@@ -9,13 +9,6 @@ import { MenuItem } from '../../components/stores/MenuItem'
 
 type ParamsType = {
   storeId: string
-}
-
-export type MenuItemType = {
-  id: string
-  itemName: string
-  price: number
-  photo: string
 }
 
 export type StaticPropsType = {

@@ -17,6 +17,7 @@ const MOCK_SOME_ITEMS_INIT_STATE = {
         id: 'item1',
         name: 'Cappucino',
         price: 3.5,
+        photo: '/food-img-url-1',
       },
       quantity: 1,
     },
@@ -29,6 +30,7 @@ const MOCK_SOME_ITEMS_INIT_STATE = {
         id: 'item2',
         name: 'Expresso',
         price: 3.5,
+        photo: '/food-img-url-2',
       },
       quantity: 1,
     },
@@ -46,15 +48,16 @@ const ADD_ITEM_ACTION_CAPPUNICCINO = {
       id: 'item1',
       name: 'Cappucino',
       price: 3.5,
+      photo: '/food-img-url-1',
     },
   },
 }
 
-describe('CartContext reducer', () => {
+describe('CartContext', () => {
   beforeEach(() => {
     localStorage.clear()
   })
-  test('Add one item when ADD_ITEM action is passed into cart reducer', () => {
+  test('Reducer add one item when ADD_ITEM action is passed into cart reducer', () => {
     const newState = cartReducer(
       MOCK_EMPTY_INIT_STATE,
       ADD_ITEM_ACTION_CAPPUNICCINO
@@ -70,12 +73,13 @@ describe('CartContext reducer', () => {
           id: 'item1',
           name: 'Cappucino',
           price: 3.5,
+          photo: '/food-img-url-1',
         },
         quantity: 1,
       },
     ])
   })
-  test(`Only increment item's quantity if item already exists`, () => {
+  test(`Reducer only increment item's quantity if item already exists`, () => {
     const newState = cartReducer(
       MOCK_SOME_ITEMS_INIT_STATE,
       ADD_ITEM_ACTION_CAPPUNICCINO
@@ -91,6 +95,7 @@ describe('CartContext reducer', () => {
           id: 'item1',
           name: 'Cappucino',
           price: 3.5,
+          photo: '/food-img-url-1',
         },
         quantity: 2,
       },
@@ -103,6 +108,7 @@ describe('CartContext reducer', () => {
           id: 'item2',
           name: 'Expresso',
           price: 3.5,
+          photo: '/food-img-url-2',
         },
         quantity: 1,
       },

@@ -7,7 +7,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import Image from 'next/image'
-import { MenuItemType } from 'pages/stores/[storeId]'
+import { MenuItemType } from 'db/db'
 import React from 'react'
 import { useCart } from 'store/CartContext'
 
@@ -35,6 +35,7 @@ export function MenuItem({ item, storeDetails }: MenuItemProps) {
           id: item.id,
           name: item.itemName,
           price: item.price,
+          photo: item.photo,
         },
       },
     })
