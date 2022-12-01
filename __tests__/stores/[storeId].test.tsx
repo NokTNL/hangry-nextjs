@@ -103,11 +103,13 @@ describe('/stores/[storeId] page - Unit tests', () => {
     const expressoButton = screen.getByRole('button', { name: /Expresso/i })
 
     // Item photos
-    expect(
-      within(capuccinoButton).getByRole('img').getAttribute('src')
-    ).toMatch(/food-img-url-1/)
-    expect(within(expressoButton).getByRole('img').getAttribute('src')).toMatch(
-      /food-img-url-2/
+    expect(within(capuccinoButton).getByRole('img')).toHaveAttribute(
+      'src',
+      expect.stringMatching(/food-img-url-1/)
+    )
+    expect(within(expressoButton).getByRole('img')).toHaveAttribute(
+      'src',
+      expect.stringMatching(/food-img-url-2/)
     )
     // Item prices
     expect(within(capuccinoButton).getByText(/£3\.50/)).toBeInTheDocument()

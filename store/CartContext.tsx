@@ -38,11 +38,12 @@ export function CartProvider({
   useEffect(() => {
     if (spyContextValues?.state) spyContextValues.state = state
   })
-  // Spy on dispatch
-  const contextDispatch = spyContextValues?.dispatch
+  // Spy on dispatch, if available
+  const spyDispatch = spyContextValues?.dispatch
+  const contextDispatch = spyDispatch
     ? (action: CartActionTypes) => {
         dispatch(action)
-        spyContextValues.dispatch!(action)
+        spyDispatch(action)
       }
     : dispatch
 
