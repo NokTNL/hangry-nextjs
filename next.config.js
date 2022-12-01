@@ -5,7 +5,7 @@ const nextConfig = {
 
   // ESLint
   eslint: {
-    dirs: ['pages', 'components', 'store'],
+    dirs: ['pages', 'components', 'store', '__tests__'],
   },
 
   // SVGR
