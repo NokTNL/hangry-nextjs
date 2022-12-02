@@ -15,7 +15,7 @@ import Image from 'next/image'
 import { CartItemType } from 'store/constants'
 
 type CartItemProps = {
-  itemDetails: CartItemType
+  itemDetails: Omit<CartItemType, 'store'>
 }
 
 export function CartItem({ itemDetails }: CartItemProps) {

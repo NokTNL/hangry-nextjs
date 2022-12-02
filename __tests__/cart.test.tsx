@@ -47,7 +47,7 @@ const MOCK_SOME_ITEMS_INIT_STATE = {
 }
 
 describe('/cart page', () => {
-  test('Display items grouped together in one store', () => {
+  test('Display all details of items, grouped in one store', () => {
     render(
       <CartProvider initialState={MOCK_SOME_ITEMS_INIT_STATE}>
         <CartPage />
@@ -83,5 +83,36 @@ describe('/cart page', () => {
       within(icedLatteEl).getByRole('spinbutton', { name: /quantity/i })
     ).toHaveValue('15')
   })
-  test.todo('Display items grouped into multiple stores')
+  test('Display titles of items grouped into multiple stores', () => {
+    render(
+      <CartProvider initialState={MOCK_SOME_ITEMS_INIT_STATE}>
+        <CartPage />
+      </CartProvider>
+    )
+
+    // Starbucks
+    const starbucksEl = screen.getByRole('listitem', {
+      name: /Starbucks/i,
+    })
+    expect(
+      within(starbucksEl).getByRole('listitem', {
+        name: /Cappucino/,
+      })
+    ).toBeInTheDocument()
+    expect(
+      within(starbucksEl).getByRole('listitem', {
+        name: /Iced Latte/,
+      })
+    ).toBeInTheDocument()
+
+    // Pret a Manger
+    const pretEl = screen.getByRole('listitem', {
+      name: /Pret a Manger/i,
+    })
+    expect(
+      within(pretEl).getByRole('listitem', {
+        name: /Expresso/,
+      })
+    ).toBeInTheDocument()
+  })
 })

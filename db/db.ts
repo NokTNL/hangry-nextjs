@@ -22,7 +22,14 @@ export const STORE_DB = [
     id: '2',
     logoImage: '/img/burger-king.svg',
     name: 'Burger King',
-    menu: [],
+    menu: [
+      {
+        id: 'item10',
+        itemName: 'Big chicken burger',
+        price: 7.49,
+        photo: '/img/chicken-royle.png',
+      },
+    ],
   },
   {
     id: '3',

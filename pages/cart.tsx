@@ -1,13 +1,12 @@
 import { Box, Heading, Text, VStack } from '@chakra-ui/react'
 import { CartItem } from 'components/cart/CartItem'
 import { useCart } from 'store/CartContext'
+import { groupItemsByStore } from 'utils/cart-utils'
 
 export default function CartPage() {
   const { state } = useCart()
 
-  const starBucksItems = state.items.filter(
-    item => item.store.name === 'Starbucks'
-  )
+  const groupedStores = groupItemsByStore(state.items)
 
   return (
     <main>
@@ -25,27 +24,26 @@ export default function CartPage() {
         as="ul"
         alignItems="stretch"
         p="20px"
-        spacing="15px"
+        spacing="20px"
         aria-labelledby="page-heading"
       >
-        <Box as="li" listStyleType="none" title={'Starbucks'}>
-          <VStack as="ul" px="4px" alignItems="stretch">
-            <Text as="span" color="gray.600" fontSize="20px" fontWeight="700">
-              Starbucks
-            </Text>
-            {starBucksItems.map(item => (
-              <CartItem key={item.item.id} itemDetails={item} />
-            ))}
-          </VStack>
-        </Box>
-
-        {/* {state.items.map(item => (
-            <MenuItem
-              item={item}
-              key={item.id}
-              storeDetails={{ name: storeName, id: storeId }}
-            />
-          ))} */}
+        {groupedStores.map(store => (
+          <Box
+            as="li"
+            listStyleType="none"
+            title={store.store.name}
+            key={store.store.id}
+          >
+            <VStack as="ul" px="4px" alignItems="stretch" title="list of items">
+              <Text as="span" color="gray.600" fontSize="20px" fontWeight="700">
+                {store.store.name}
+              </Text>
+              {store.items.map(item => (
+                <CartItem key={item.item.id} itemDetails={item} />
+              ))}
+            </VStack>
+          </Box>
+        ))}
       </VStack>
     </main>
   )
