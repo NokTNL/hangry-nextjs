@@ -4,7 +4,7 @@ import {
   CartActionTypes,
   CartContextState,
   CartProviderProps,
-  CONTEXT_DEFAULT_VALUE,
+  getContextDefaultValue,
   LOCAL_STORAGE_KEY,
 } from './constants'
 
@@ -12,13 +12,13 @@ import {
  * Context
  */
 
-export const CartContext = createContext(CONTEXT_DEFAULT_VALUE)
+export const CartContext = createContext(getContextDefaultValue())
 
 export function CartProvider({
   children,
   spyContextValues,
 }: PropsWithChildren & CartProviderProps) {
-  const initialState = spyContextValues?.state ?? CONTEXT_DEFAULT_VALUE.state
+  const initialState = spyContextValues?.state ?? getContextDefaultValue().state
 
   const [state, dispatch] = useReducer(cartReducer, initialState)
 

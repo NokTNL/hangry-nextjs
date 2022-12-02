@@ -1,10 +1,15 @@
-import { Box, Heading, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Heading, Spacer, Text, VStack } from '@chakra-ui/react'
 import { CartItem } from 'components/cart/CartItem'
 import { useCart } from 'store/CartContext'
 import { groupItemsByStore } from 'utils/cart-utils'
 
 export default function CartPage() {
   const { state } = useCart()
+
+  const subtotal = state.items.reduce(
+    (sum, item) => sum + item.item.price * item.quantity,
+    0
+  )
 
   const groupedStores = groupItemsByStore(state.items)
 
@@ -45,6 +50,17 @@ export default function CartPage() {
           </Box>
         ))}
       </VStack>
+      <Flex
+        as="section"
+        fontWeight="600"
+        fontSize="24px"
+        px="24px"
+        aria-label="Subtotal"
+      >
+        <Text>Subtotal:</Text>
+        <Spacer />
+        <Text>£{subtotal.toFixed(2)}</Text>
+      </Flex>
     </main>
   )
 }

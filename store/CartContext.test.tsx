@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
 import { CartProvider } from './CartContext'
-import { CONTEXT_DEFAULT_VALUE, LOCAL_STORAGE_KEY } from './constants'
+import { getContextDefaultValue, LOCAL_STORAGE_KEY } from './constants'
 
 const MOCK_SOME_ITEMS_INIT_STATE = {
   items: [
@@ -40,7 +40,7 @@ describe('CartContext', () => {
   test(`Cart state synced from local storage initially`, () => {
     const spyContextValues = {
       state: {
-        ...CONTEXT_DEFAULT_VALUE.state,
+        ...getContextDefaultValue().state,
       },
     }
 

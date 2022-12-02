@@ -2,9 +2,9 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import CartPage from 'pages/cart'
 import { CartProvider } from 'store/CartContext'
-import { CONTEXT_DEFAULT_VALUE } from 'store/constants'
+import { getContextDefaultValue } from 'store/constants'
 
-const MOCK_SOME_ITEMS_INIT_STATE = {
+const getSomeItemsDefaultState = () => ({
   items: [
     {
       store: {
@@ -46,14 +46,14 @@ const MOCK_SOME_ITEMS_INIT_STATE = {
       quantity: 20,
     },
   ],
-}
+})
 
 describe('/cart page', () => {
   test('Display all details of items, grouped in one store', () => {
     const spyContextValues = {
       state: {
-        ...CONTEXT_DEFAULT_VALUE.state,
-        ...MOCK_SOME_ITEMS_INIT_STATE,
+        ...getContextDefaultValue().state,
+        ...getSomeItemsDefaultState(),
       },
     }
     render(
@@ -94,8 +94,8 @@ describe('/cart page', () => {
   test('Display titles of items grouped into multiple stores', () => {
     const spyContextValues = {
       state: {
-        ...CONTEXT_DEFAULT_VALUE.state,
-        ...MOCK_SOME_ITEMS_INIT_STATE,
+        ...getContextDefaultValue().state,
+        ...getSomeItemsDefaultState(),
       },
     }
     render(
@@ -133,8 +133,8 @@ describe('/cart page', () => {
     const user = userEvent.setup()
     const spyContextValues = {
       state: {
-        ...CONTEXT_DEFAULT_VALUE.state,
-        ...MOCK_SOME_ITEMS_INIT_STATE,
+        ...getContextDefaultValue().state,
+        ...getSomeItemsDefaultState(),
       },
     }
     render(
@@ -161,8 +161,8 @@ describe('/cart page', () => {
     const user = userEvent.setup()
     const spyContextValues = {
       state: {
-        ...CONTEXT_DEFAULT_VALUE.state,
-        ...MOCK_SOME_ITEMS_INIT_STATE,
+        ...getContextDefaultValue().state,
+        ...getSomeItemsDefaultState(),
       },
     }
     render(
@@ -191,5 +191,20 @@ describe('/cart page', () => {
     expect(
       screen.getByRole('listitem', { name: /Iced Latte/ })
     ).toBeInTheDocument()
+  })
+  test(`Display correct subtotal value`, () => {
+    const spyContextValues = {
+      state: {
+        ...getContextDefaultValue().state,
+        ...getSomeItemsDefaultState(),
+      },
+    }
+    render(
+      <CartProvider spyContextValues={spyContextValues}>
+        <CartPage />
+      </CartProvider>
+    )
+
+    expect(screen.getByLabelText(/Subtotal/i)).toHaveTextContent(/£135\.00/i)
   })
 })

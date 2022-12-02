@@ -6,7 +6,7 @@ import StoreMenuPage, {
   StaticPropsType,
 } from 'pages/stores/[storeId]'
 import { CartProvider } from 'store/CartContext'
-import { CONTEXT_DEFAULT_VALUE, LOCAL_STORAGE_KEY } from 'store/constants'
+import { getContextDefaultValue, LOCAL_STORAGE_KEY } from 'store/constants'
 
 const MOCK_STORE_DB = [
   {
@@ -56,9 +56,6 @@ const MOCK_PAGE_PROPS = {
 }
 
 describe('/stores/[storeId] page - Unit tests', () => {
-  beforeEach(() => {
-    localStorage.clear()
-  })
   test('Get correct paths from getStaticPaths', () => {
     const getStaticPathResult = getStaticPaths(
       {},
@@ -125,7 +122,7 @@ describe('/stores/[storeId] page - Unit tests', () => {
   test('Menu item clicked, add one item to cart', async () => {
     const spyContextValues = {
       state: {
-        ...CONTEXT_DEFAULT_VALUE.state,
+        ...getContextDefaultValue().state,
         items: [],
       },
     }
@@ -158,7 +155,7 @@ describe('/stores/[storeId] page - Unit tests', () => {
   test('Different item clicked, add one item to cart', async () => {
     const spyContextValues = {
       state: {
-        ...CONTEXT_DEFAULT_VALUE.state,
+        ...getContextDefaultValue().state,
         items: [],
       },
     }
@@ -205,7 +202,7 @@ describe('/stores/[storeId] page - Unit tests', () => {
   test(`Only increment item's quantity if item already exists`, async () => {
     const spyContextValues = {
       state: {
-        ...CONTEXT_DEFAULT_VALUE.state,
+        ...getContextDefaultValue().state,
         items: [],
       },
     }
@@ -242,7 +239,7 @@ describe('/stores/[storeId] page - Unit tests', () => {
     // !!! BUT you can call localStorage directly in your test code!
     const spyContextValues = {
       state: {
-        ...CONTEXT_DEFAULT_VALUE.state,
+        ...getContextDefaultValue().state,
         items: [],
       },
     }
