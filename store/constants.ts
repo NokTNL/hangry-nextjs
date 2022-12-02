@@ -39,6 +39,13 @@ export type CartActionTypes =
         newQuantity: number
       }
     }
+  | {
+      type: 'DELETE_ITEM'
+      payload: {
+        store: CartItemType['store']
+        item: CartItemType['item']
+      }
+    }
 
 /**
  * Constants

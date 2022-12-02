@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import CartPage from 'pages/cart'
 import { CartProvider } from 'store/CartContext'
-import userEvent from '@testing-library/user-event'
 
 const MOCK_SOME_ITEMS_INIT_STATE = {
   items: [
@@ -137,5 +137,34 @@ describe('/cart page', () => {
         name: /quantity/i,
       })
     ).toHaveValue('100')
+  })
+  test('Delete button shows confirmation modal, confirm, then delete item', async () => {
+    const user = userEvent.setup()
+    render(
+      <CartProvider initialState={MOCK_SOME_ITEMS_INIT_STATE}>
+        <CartPage />
+      </CartProvider>
+    )
+
+    const cappucinoEl = screen.getByRole('listitem', { name: /Cappucino/ })
+
+    await user.click(
+      within(cappucinoEl).getByRole('button', { name: /remove item/i })
+    )
+
+    await user.click(screen.getByRole('button', { name: /confirm remove/i }))
+
+    // Target item removed
+    expect(
+      screen.queryByRole('listitem', { name: /Cappucino/ })
+    ).not.toBeInTheDocument()
+
+    // Remaining items should still be in the document
+    expect(
+      screen.getByRole('listitem', { name: /Expresso/ })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('listitem', { name: /Iced Latte/ })
+    ).toBeInTheDocument()
   })
 })

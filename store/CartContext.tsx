@@ -114,6 +114,17 @@ export function cartReducer(
       if (foundItem) {
         foundItem.quantity = newQuantity
       }
+      break
+    }
+    case 'DELETE_ITEM': {
+      const { store: payloadStore, item: payloadItem } = action.payload
+      newState.items = newState.items.filter(
+        item =>
+          !(
+            item.store.id === payloadStore.id && item.item.id === payloadItem.id
+          )
+      )
+      break
     }
   }
 

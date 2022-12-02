@@ -25,7 +25,7 @@ export const STORE_DB = [
     menu: [
       {
         id: 'item10',
-        itemName: 'Big chicken burger',
+        itemName: 'Chicken Royale',
         price: 7.49,
         photo: '/img/chicken-royle.png',
       },
