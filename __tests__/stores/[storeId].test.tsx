@@ -6,6 +6,7 @@ import StoreMenuPage, {
   StaticPropsType,
 } from 'pages/stores/[storeId]'
 import { CartProvider } from 'store/CartContext'
+import { CONTEXT_DEFAULT_VALUE, LOCAL_STORAGE_KEY } from 'store/constants'
 
 const MOCK_STORE_DB = [
   {
@@ -55,10 +56,16 @@ const MOCK_PAGE_PROPS = {
 }
 
 describe('/stores/[storeId] page - Unit tests', () => {
+  beforeEach(() => {
+    localStorage.clear()
+  })
   test('Get correct paths from getStaticPaths', () => {
-    const getStaticPathResult = getStaticPaths(undefined as any, {
-      mockDB: MOCK_STORE_DB,
-    })
+    const getStaticPathResult = getStaticPaths(
+      {},
+      {
+        mockDB: MOCK_STORE_DB,
+      }
+    )
 
     expect(getStaticPathResult.paths).toEqual([
       {
@@ -115,9 +122,12 @@ describe('/stores/[storeId] page - Unit tests', () => {
     expect(within(capuccinoButton).getByText(/£3\.50/)).toBeInTheDocument()
     expect(within(expressoButton).getByText(/£2\.00/)).toBeInTheDocument()
   })
-  test('Dispatch add item action when menu item clicked', async () => {
+  test('Menu item clicked, add one item to cart', async () => {
     const spyContextValues = {
-      dispatch: jest.fn(),
+      state: {
+        ...CONTEXT_DEFAULT_VALUE.state,
+        items: [],
+      },
     }
 
     const user = userEvent.setup()
@@ -129,9 +139,8 @@ describe('/stores/[storeId] page - Unit tests', () => {
 
     await user.click(screen.getByText(/Cappucino/))
 
-    expect(spyContextValues.dispatch).toHaveBeenCalledWith({
-      type: 'ADD_ITEM',
-      payload: {
+    expect(spyContextValues.state.items).toEqual([
+      {
         store: {
           id: '1',
           name: 'Starbucks',
@@ -140,9 +149,117 @@ describe('/stores/[storeId] page - Unit tests', () => {
           id: 'item1',
           name: 'Cappucino',
           price: 3.5,
-          photo: '/food-img-url-1',
+          photo: expect.anything(),
         },
+        quantity: 1,
       },
-    })
+    ])
+  })
+  test('Different item clicked, add one item to cart', async () => {
+    const spyContextValues = {
+      state: {
+        ...CONTEXT_DEFAULT_VALUE.state,
+        items: [],
+      },
+    }
+
+    const user = userEvent.setup()
+    render(
+      <CartProvider spyContextValues={spyContextValues}>
+        <StoreMenuPage {...MOCK_PAGE_PROPS} />
+      </CartProvider>
+    )
+
+    await user.click(screen.getByText(/Cappucino/))
+    await user.click(screen.getByText(/Expresso/))
+
+    expect(spyContextValues.state.items).toEqual([
+      {
+        store: {
+          id: '1',
+          name: 'Starbucks',
+        },
+        item: {
+          id: 'item1',
+          name: 'Cappucino',
+          price: 3.5,
+          photo: expect.anything(),
+        },
+        quantity: 1,
+      },
+      {
+        store: {
+          id: '1',
+          name: 'Starbucks',
+        },
+        item: {
+          id: 'item2',
+          name: 'Expresso',
+          price: 2,
+          photo: expect.anything(),
+        },
+        quantity: 1,
+      },
+    ])
+  })
+  test(`Only increment item's quantity if item already exists`, async () => {
+    const spyContextValues = {
+      state: {
+        ...CONTEXT_DEFAULT_VALUE.state,
+        items: [],
+      },
+    }
+
+    const user = userEvent.setup()
+    render(
+      <CartProvider spyContextValues={spyContextValues}>
+        <StoreMenuPage {...MOCK_PAGE_PROPS} />
+      </CartProvider>
+    )
+
+    // Click two times
+    await user.click(screen.getByText(/Cappucino/))
+    await user.click(screen.getByText(/Cappucino/))
+
+    expect(spyContextValues.state.items).toEqual([
+      {
+        store: {
+          id: '1',
+          name: 'Starbucks',
+        },
+        item: {
+          id: 'item1',
+          name: 'Cappucino',
+          price: 3.5,
+          photo: expect.anything(),
+        },
+        quantity: 2,
+      },
+    ])
+  })
+  test(`Save cart state in local storage when adding items`, async () => {
+    // Mocking/Spying directly on localStorage is NOT possible with jsdom: https://stackoverflow.com/a/54157998
+    // !!! BUT you can call localStorage directly in your test code!
+    const spyContextValues = {
+      state: {
+        ...CONTEXT_DEFAULT_VALUE.state,
+        items: [],
+      },
+    }
+
+    const user = userEvent.setup()
+
+    render(
+      <CartProvider spyContextValues={spyContextValues}>
+        <StoreMenuPage {...MOCK_PAGE_PROPS} />
+      </CartProvider>
+    )
+
+    await user.click(screen.getByText(/Cappucino/))
+    render(<CartProvider spyContextValues={spyContextValues} />)
+
+    expect(localStorage.getItem(LOCAL_STORAGE_KEY)).toEqual(
+      JSON.stringify(spyContextValues.state)
+    )
   })
 })

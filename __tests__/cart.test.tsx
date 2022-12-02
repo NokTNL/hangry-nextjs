@@ -2,6 +2,7 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import CartPage from 'pages/cart'
 import { CartProvider } from 'store/CartContext'
+import { CONTEXT_DEFAULT_VALUE } from 'store/constants'
 
 const MOCK_SOME_ITEMS_INIT_STATE = {
   items: [
@@ -49,8 +50,14 @@ const MOCK_SOME_ITEMS_INIT_STATE = {
 
 describe('/cart page', () => {
   test('Display all details of items, grouped in one store', () => {
+    const spyContextValues = {
+      state: {
+        ...CONTEXT_DEFAULT_VALUE.state,
+        ...MOCK_SOME_ITEMS_INIT_STATE,
+      },
+    }
     render(
-      <CartProvider initialState={MOCK_SOME_ITEMS_INIT_STATE}>
+      <CartProvider spyContextValues={spyContextValues}>
         <CartPage />
       </CartProvider>
     )
@@ -85,8 +92,14 @@ describe('/cart page', () => {
     ).toHaveValue('15')
   })
   test('Display titles of items grouped into multiple stores', () => {
+    const spyContextValues = {
+      state: {
+        ...CONTEXT_DEFAULT_VALUE.state,
+        ...MOCK_SOME_ITEMS_INIT_STATE,
+      },
+    }
     render(
-      <CartProvider initialState={MOCK_SOME_ITEMS_INIT_STATE}>
+      <CartProvider spyContextValues={spyContextValues}>
         <CartPage />
       </CartProvider>
     )
@@ -118,8 +131,14 @@ describe('/cart page', () => {
   })
   test('Spinbutton changes item quantity', async () => {
     const user = userEvent.setup()
+    const spyContextValues = {
+      state: {
+        ...CONTEXT_DEFAULT_VALUE.state,
+        ...MOCK_SOME_ITEMS_INIT_STATE,
+      },
+    }
     render(
-      <CartProvider initialState={MOCK_SOME_ITEMS_INIT_STATE}>
+      <CartProvider spyContextValues={spyContextValues}>
         <CartPage />
       </CartProvider>
     )
@@ -140,8 +159,14 @@ describe('/cart page', () => {
   })
   test('Delete button shows confirmation modal, confirm, then delete item', async () => {
     const user = userEvent.setup()
+    const spyContextValues = {
+      state: {
+        ...CONTEXT_DEFAULT_VALUE.state,
+        ...MOCK_SOME_ITEMS_INIT_STATE,
+      },
+    }
     render(
-      <CartProvider initialState={MOCK_SOME_ITEMS_INIT_STATE}>
+      <CartProvider spyContextValues={spyContextValues}>
         <CartPage />
       </CartProvider>
     )

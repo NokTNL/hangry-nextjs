@@ -16,10 +16,9 @@ export const CartContext = createContext(CONTEXT_DEFAULT_VALUE)
 
 export function CartProvider({
   children,
-  initialState: initialStateFromProps,
   spyContextValues,
 }: PropsWithChildren & CartProviderProps) {
-  const initialState = initialStateFromProps ?? CONTEXT_DEFAULT_VALUE.state
+  const initialState = spyContextValues?.state ?? CONTEXT_DEFAULT_VALUE.state
 
   const [state, dispatch] = useReducer(cartReducer, initialState)
 
@@ -38,14 +37,8 @@ export function CartProvider({
   useEffect(() => {
     if (spyContextValues?.state) spyContextValues.state = state
   })
-  // Spy on dispatch, if available
-  const spyDispatch = spyContextValues?.dispatch
-  const contextDispatch = spyDispatch
-    ? (action: CartActionTypes) => {
-        dispatch(action)
-        spyDispatch(action)
-      }
-    : dispatch
+
+  const contextDispatch = dispatch
 
   return (
     <CartContext.Provider value={{ state, dispatch: contextDispatch }}>
