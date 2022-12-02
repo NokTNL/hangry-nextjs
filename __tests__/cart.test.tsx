@@ -57,26 +57,31 @@ describe('/cart page', () => {
     const starbucksEl = screen.getByRole('listitem', {
       name: /Starbucks/i,
     })
-
-    const MOCK_STARBUCK_ITEMS = MOCK_SOME_ITEMS_INIT_STATE.items.filter(
-      item => item.store.name === 'Starbucks'
+    // Capucino item
+    const cappucinoEl = within(starbucksEl).getByRole('listitem', {
+      name: /Cappucino/,
+    })
+    expect(within(cappucinoEl).getByRole('img')).toHaveAttribute(
+      'src',
+      expect.stringMatching(/food-img-url-1/)
     )
+    expect(within(cappucinoEl).getByText(/£2\.00/)).toBeInTheDocument()
+    expect(
+      within(cappucinoEl).getByRole('spinbutton', { name: /quantity/i })
+    ).toHaveValue('10')
 
-    for (const item of MOCK_STARBUCK_ITEMS) {
-      const itemEl = within(starbucksEl).getByRole('listitem', {
-        name: new RegExp(item.item.name, 'i'),
-      })
-      expect(within(itemEl).getByRole('img')).toHaveAttribute(
-        'src',
-        expect.stringMatching(item.item.photo.replace(/^\//, ''))
-      )
-      expect(
-        within(itemEl).getByText(new RegExp(`£${item.item.price}`))
-      ).toBeInTheDocument()
-      expect(
-        within(itemEl).getByRole('spinbutton', { name: /quantity/i })
-      ).toHaveValue(item.quantity.toString())
-    }
+    // Iced Latte item
+    const icedLatteEl = within(starbucksEl).getByRole('listitem', {
+      name: /Iced Latte/,
+    })
+    expect(within(icedLatteEl).getByRole('img')).toHaveAttribute(
+      'src',
+      expect.stringMatching(/food-img-url-2/)
+    )
+    expect(within(icedLatteEl).getByText(/£3\.00/)).toBeInTheDocument()
+    expect(
+      within(icedLatteEl).getByRole('spinbutton', { name: /quantity/i })
+    ).toHaveValue('15')
   })
   test.todo('Display items grouped into multiple stores')
 })
