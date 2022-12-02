@@ -31,6 +31,14 @@ export type CartActionTypes =
       type: 'ADD_ITEM'
       payload: Omit<CartItemType, 'quantity'>
     }
+  | {
+      type: 'CHANGE_ITEM_QUANTITY'
+      payload: {
+        store: CartItemType['store']
+        item: CartItemType['item']
+        newQuantity: number
+      }
+    }
 
 /**
  * Constants

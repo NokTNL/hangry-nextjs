@@ -39,7 +39,7 @@ export default function CartPage() {
                 {store.store.name}
               </Text>
               {store.items.map(item => (
-                <CartItem key={item.item.id} itemDetails={item} />
+                <CartItem key={item.item.id} item={item} store={store.store} />
               ))}
             </VStack>
           </Box>

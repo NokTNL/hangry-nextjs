@@ -1,6 +1,7 @@
 import { render, screen, within } from '@testing-library/react'
 import CartPage from 'pages/cart'
 import { CartProvider } from 'store/CartContext'
+import userEvent from '@testing-library/user-event'
 
 const MOCK_SOME_ITEMS_INIT_STATE = {
   items: [
@@ -114,5 +115,27 @@ describe('/cart page', () => {
         name: /Expresso/,
       })
     ).toBeInTheDocument()
+  })
+  test('Spinbutton changes item quantity', async () => {
+    const user = userEvent.setup()
+    render(
+      <CartProvider initialState={MOCK_SOME_ITEMS_INIT_STATE}>
+        <CartPage />
+      </CartProvider>
+    )
+
+    const espressoEl = screen.getByRole('listitem', { name: /Expresso/ })
+    const espressoQuantityInput = within(espressoEl).getByRole('spinbutton', {
+      name: /quantity/i,
+    })
+
+    await user.clear(espressoQuantityInput)
+    await user.type(espressoQuantityInput, '100')
+
+    expect(
+      within(espressoEl).getByRole('spinbutton', {
+        name: /quantity/i,
+      })
+    ).toHaveValue('100')
   })
 })

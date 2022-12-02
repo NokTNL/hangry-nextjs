@@ -62,7 +62,7 @@ export function cartReducer(
   state: CartContextState,
   action: CartActionTypes
 ): CartContextState {
-  let newState = state
+  let newState = { ...state }
 
   switch (action.type) {
     case 'INITIAL_SYNC': {
@@ -98,6 +98,21 @@ export function cartReducer(
       newState = {
         ...state,
         items: newArrayOfItems,
+      }
+      break
+    }
+    case 'CHANGE_ITEM_QUANTITY': {
+      const {
+        store: payloadStore,
+        item: payloadItem,
+        newQuantity,
+      } = action.payload
+      const foundItem = newState.items.find(
+        item =>
+          item.store.id === payloadStore.id && item.item.id === payloadItem.id
+      )
+      if (foundItem) {
+        foundItem.quantity = newQuantity
       }
     }
   }
