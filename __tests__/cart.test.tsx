@@ -205,6 +205,6 @@ describe('/cart page', () => {
       </CartProvider>
     )
 
-    expect(screen.getByLabelText(/Subtotal/i)).toHaveTextContent(/£135\.00/i)
+    expect(screen.getByText(/Subtotal/i)).toHaveTextContent(/£135\.00/i)
   })
 })

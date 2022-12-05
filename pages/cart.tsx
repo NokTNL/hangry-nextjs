@@ -15,52 +15,49 @@ export default function CartPage() {
 
   return (
     <main>
-      <Heading
-        fontWeight="normal"
-        color="gray.600"
-        px="24px"
-        pt="20px"
-        fontSize="24px"
-        id="page-heading"
-      >
-        Shopping Cart
-      </Heading>
-      <VStack
-        as="ul"
-        alignItems="stretch"
-        p="20px"
-        spacing="20px"
-        aria-labelledby="page-heading"
-      >
-        {groupedStores.map(store => (
-          <Box
-            as="li"
-            listStyleType="none"
-            title={store.store.name}
-            key={store.store.id}
-          >
-            <VStack as="ul" px="4px" alignItems="stretch" title="list of items">
+      <VStack p="24px" spacing="20px" align="stretch">
+        <Heading
+          fontWeight="normal"
+          color="gray.600"
+          fontSize="24px"
+          id="page-heading"
+        >
+          Shopping Cart
+        </Heading>
+        <VStack
+          as="ul"
+          alignItems="stretch"
+          spacing="20px"
+          aria-labelledby="page-heading"
+        >
+          {groupedStores.map(store => (
+            <VStack
+              align="stretch"
+              as="li"
+              listStyleType="none"
+              title={store.store.name}
+              key={store.store.id}
+            >
               <Text as="span" color="gray.600" fontSize="20px" fontWeight="700">
                 {store.store.name}
               </Text>
-              {store.items.map(item => (
-                <CartItem key={item.item.id} item={item} store={store.store} />
-              ))}
+              <VStack as="ul" alignItems="stretch" title="list of items">
+                {store.items.map(item => (
+                  <CartItem
+                    key={item.item.id}
+                    item={item}
+                    store={store.store}
+                  />
+                ))}
+              </VStack>
             </VStack>
-          </Box>
-        ))}
+          ))}
+        </VStack>
+        <Flex as="p" fontWeight="600" fontSize="24px">
+          Subtotal:
+          <Spacer as="span" />£{subtotal.toFixed(2)}
+        </Flex>
       </VStack>
-      <Flex
-        as="section"
-        fontWeight="600"
-        fontSize="24px"
-        px="24px"
-        aria-label="Subtotal"
-      >
-        <Text>Subtotal:</Text>
-        <Spacer />
-        <Text>£{subtotal.toFixed(2)}</Text>
-      </Flex>
     </main>
   )
 }
