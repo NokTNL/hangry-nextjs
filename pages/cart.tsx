@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Spacer, Text, VStack } from '@chakra-ui/react'
+import { Flex, Heading, Spacer, Text, VStack } from '@chakra-ui/react'
 import { CartItem } from 'components/cart/CartItem'
 import { useCart } from 'store/CartContext'
 import { groupItemsByStore } from 'utils/cart-utils'

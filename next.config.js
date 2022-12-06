@@ -20,9 +20,16 @@ const nextConfig = {
   },
 }
 
+// module.exports = nextConfig
+
 // Webpack bundle analyzer
 // To use it, run `ANALYZE=true yarn build`
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
+// const withBundleAnalyzer = require('@next/bundle-analyzer')({
+//   enabled: process.env.ANALYZE === 'true',
+// })
+
+// PWA
+const withPWA = require('next-pwa')({
+  dest: 'public',
 })
-module.exports = withBundleAnalyzer(nextConfig)
+module.exports = withPWA(nextConfig)

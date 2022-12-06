@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+
+  "name": "Hangry NextJS",
+
+  "background_color": "#09cbd2",
+
+  "theme_color": "#09cbd2",
+  "start_url": "/stores",
+  "display": "standalone",
+
+  "icons": [
+    {
+      "src": "/img/chicken-royle-xs.png",
+      "type": "image/png",
+      "sizes": "75x75"
+    },
+    {
+      "src": "/img/chicken-royle-medium.png",
+      "type": "image/png",
+      "sizes": "200x200"
+    },
+    {
+      "src": "/img/chicken-royle-large.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
