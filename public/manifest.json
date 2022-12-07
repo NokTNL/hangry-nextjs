@@ -11,7 +11,7 @@
 
   "icons": [
     {
-      "src": "/img/chicken-royle-xs.png",
+      "src": "/img/chicken-royle-small.png",
       "type": "image/png",
       "sizes": "75x75"
     },

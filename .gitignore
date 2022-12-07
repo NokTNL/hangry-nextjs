@@ -39,5 +39,5 @@ next-env.d.ts
 !/.vscode/
 
 # PWA
-sw.js
-workbox-*.js
+sw.js*
+workbox-*.js*
