@@ -1,8 +1,8 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import CartPage from 'pages/cart'
-import { CartProvider } from 'store/CartContext'
-import { getContextDefaultValue } from 'store/constants'
+import { CartProvider } from 'src/store/CartContext'
+import { getContextDefaultValue } from 'src/store/constants'
 
 const getSomeItemsDefaultState = () => ({
   items: [

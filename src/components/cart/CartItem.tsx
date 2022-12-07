@@ -21,11 +21,11 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import DeleteSvg from 'assets/delete.svg'
+import DeleteSvg from 'src/assets/delete.svg'
 import Image from 'next/image'
 import { useState } from 'react'
-import { useCart } from 'store/CartContext'
-import { CartItemType } from 'store/constants'
+import { useCart } from 'src/store/CartContext'
+import { CartItemType } from 'src/store/constants'
 
 type CartItemProps = {
   item: Omit<CartItemType, 'store'>

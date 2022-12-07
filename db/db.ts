@@ -1,3 +1,6 @@
+/**
+ * This is a dummy DB. It can only be used as static data and cannot be updated
+ */
 export const STORE_DB = [
   {
     id: '1',

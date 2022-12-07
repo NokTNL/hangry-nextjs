@@ -1,8 +1,8 @@
 import { ChakraProvider } from '@chakra-ui/react'
-import { AppHeader } from 'components/AppHeader'
+import { AppHeader } from 'src/components/AppHeader'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import { CartProvider } from 'store/CartContext'
+import { CartProvider } from 'src/store/CartContext'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

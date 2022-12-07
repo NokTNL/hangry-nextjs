@@ -1,7 +1,7 @@
 import { Flex, Heading, Spacer, Text, VStack } from '@chakra-ui/react'
-import { CartItem } from 'components/cart/CartItem'
-import { useCart } from 'store/CartContext'
-import { groupItemsByStore } from 'utils/cart-utils'
+import { CartItem } from 'src/components/cart/CartItem'
+import { useCart } from 'src/store/CartContext'
+import { groupItemsByStore } from 'src/utils/cart-utils'
 
 export default function CartPage() {
   const { state } = useCart()

@@ -1,4 +1,4 @@
-import { CartItemType } from 'store/constants'
+import { CartItemType } from 'src/store/constants'
 
 type GroupedItemsByStore = {
   store: CartItemType['store']

@@ -9,8 +9,8 @@ import {
 } from '@chakra-ui/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import CartSVG from 'assets/cart.svg'
-import NextJsPNG from 'assets/nextjs.png'
+import CartSVG from 'src/assets/cart.svg'
+import NextJsPNG from 'src/assets/nextjs.png'
 
 export function AppHeader() {
   return (

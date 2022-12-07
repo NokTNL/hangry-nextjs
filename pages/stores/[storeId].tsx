@@ -6,7 +6,7 @@ import {
   GetStaticPropsResult,
 } from 'next'
 import Head from 'next/head'
-import { MenuItem } from '../../components/stores/MenuItem'
+import { MenuItem } from 'src/components/stores/MenuItem'
 
 type ParamsType = {
   storeId: string

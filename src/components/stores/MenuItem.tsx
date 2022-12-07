@@ -9,7 +9,7 @@ import {
 import Image from 'next/image'
 import { MenuItemType } from 'db/db'
 import React from 'react'
-import { useCart } from 'store/CartContext'
+import { useCart } from 'src/store/CartContext'
 
 type MenuItemProps = {
   item: MenuItemType
