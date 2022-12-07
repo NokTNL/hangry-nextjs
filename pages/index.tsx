@@ -29,9 +29,10 @@ export default function Home() {
               Chakra UI!
             </Text>
           </Heading>
-          <Button>
-            <Link href="/stores">Browse Hangry Stores</Link>
-          </Button>
+
+          <Link href="/stores">
+            <Button>Browse Hangry Stores</Button>
+          </Link>
         </VStack>
       </Center>
     </>
