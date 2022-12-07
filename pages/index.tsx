@@ -14,7 +14,6 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Hangry NextJS</title>
         <meta
           name="description"
           content="Get the latest food available on NextJS!"

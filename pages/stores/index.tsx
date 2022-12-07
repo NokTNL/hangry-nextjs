@@ -19,12 +19,7 @@ export default function StoresPage({
   return (
     <>
       <Head>
-        <title>Hangry NextJS: Stores</title>
-        <meta
-          name="description"
-          content="Get the latest food available on Hangry NextJS!"
-        />
-        <link rel="icon" href="/favicon.ico" />
+        <title>Hangry NextJS | Stores</title>
       </Head>
       <main>
         <Heading

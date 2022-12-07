@@ -5,6 +5,7 @@ import {
   GetStaticPropsContext,
   GetStaticPropsResult,
 } from 'next'
+import Head from 'next/head'
 import { MenuItem } from '../../components/stores/MenuItem'
 
 type ParamsType = {
@@ -69,6 +70,9 @@ export default function StoreMenuPage({
 }: StaticPropsType) {
   return (
     <>
+      <Head>
+        <title>{`Hangry NextJS | ${storeName}`}</title>
+      </Head>
       <Heading
         fontWeight="normal"
         color="gray.600"

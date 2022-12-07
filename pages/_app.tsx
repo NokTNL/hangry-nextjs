@@ -1,14 +1,21 @@
-import type { AppProps } from 'next/app'
 import { ChakraProvider } from '@chakra-ui/react'
-import { CartProvider } from 'store/CartContext'
 import { AppHeader } from 'components/AppHeader'
+import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import { CartProvider } from 'store/CartContext'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
       <CartProvider>
         <Head>
+          <title>Hangry NextJS</title>
+          <meta
+            name="description"
+            content="Get the latest food available on Hangry NextJS!"
+          />
+          <link rel="icon" href="/img/chicken-royle-small.png" />
+
           {/* For PWA */}
           <link rel="manifest" href="/manifest.json" />
 
