@@ -1,9 +1,9 @@
 // jest.config.js
-import nextJest from 'next/jest'
-import type { Config as JestConfig } from 'jest'
+const nextJest = require('next/jest')
 
 // Add any custom config to be passed to Jest
-const customJestConfig: JestConfig = {
+/** @type {import('jest').Config} */
+const customJestConfig = {
   // Add more setup options before each test is run
   // setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
@@ -14,7 +14,7 @@ const customJestConfig: JestConfig = {
   // For mocking SVGR objects
   // See https://github.com/vercel/next.js/issues/36682 for the original issue and this PR (https://github.com/vercel/next.js/pull/36787/files) on next/jest closed this issue
   moduleNameMapper: {
-    '^.+\\.(svg)$': require.resolve('./__mocks__/svg.js'),
+    '^.+\\.(svg)$': require.resolve('./src/__mocks__/svg.js'),
   },
 }
 
