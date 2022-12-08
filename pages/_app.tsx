@@ -3,6 +3,7 @@ import { AppHeader } from 'src/components/AppHeader'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { CartProvider } from 'src/store/CartContext'
+import Script from 'next/script'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -14,9 +15,10 @@ export default function App({ Component, pageProps }: AppProps) {
             name="description"
             content="Get the latest food available on Hangry NextJS!"
           />
+          {/* TODO: add favicon.ico */}
           <link rel="icon" href="/img/chicken-royle-small.png" />
 
-          {/* For PWA */}
+          {/* Web Manifest & polyfills */}
           <link rel="manifest" href="/manifest.json" />
 
           <meta name="theme-color" content="#09cbd2" />
@@ -37,6 +39,11 @@ export default function App({ Component, pageProps }: AppProps) {
             href="/img/chicken-royle-large.png"
           />
         </Head>
+
+        {/* Service Worker */}
+        <Script src="/setupSW.js" />
+
+        {/* Page components */}
         {pageProps.hideAppHeader ?? <AppHeader />}
         <Component {...pageProps} />
       </CartProvider>
