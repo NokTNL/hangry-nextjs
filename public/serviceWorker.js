@@ -1,4 +1,4 @@
-const VERSION = '0.0.1'
+const VERSION = '0.1.2'
 const STATIC_CACHE_NAME = `hangry-nextjs-static-v${VERSION}`
 const DYNAMIC_CACHE_NAME = `hangry-nextjs-dynamic-v${VERSION}`
 
@@ -7,11 +7,7 @@ self.addEventListener('install', event => {
 
   event.waitUntil(
     caches.open(STATIC_CACHE_NAME).then(async cache => {
-      await cache.addAll([
-        // TODO: cache shell assets
-        // '/',
-        // '/index.html',
-      ])
+      await cache.addAll(['/', '/stores', '/cart'])
       console.log('All shell assets cached')
     })
   )
@@ -39,29 +35,28 @@ self.addEventListener('fetch', event => {
         console.log('Used cached assets', response)
         return response
       }
-      // TODO: possibly dynamically cache?
-      return await fetch(event.request)
-      // return dynamicallyCache(event.request)
+      return dynamicallyCache(event.request)
     })
   )
 })
 
-// TODO: unused for now
+/** @type {(request: Request) => Response} */
 async function dynamicallyCache(request) {
-  try {
-    const response = await fetch(request)
-    const dynamicCache = await caches.open(DYNAMIC_CACHE_NAME)
-    if (request.url.startsWith('http')) {
-      console.log(
-        `Fetched new assets and stored in ${DYNAMIC_CACHE_NAME}`,
-        response
-      )
-      await dynamicCache.put(request.url, response.clone())
-    }
-    return response
-  } catch (err) {
-    if (request.url.match(/\.html$/)) {
-      return caches.match('/pages/fallback.html')
-    } else throw err
+  // try {
+  const response = await fetch(request)
+  const dynamicCache = await caches.open(DYNAMIC_CACHE_NAME)
+  if (response.headers.get('Content-Type').match(/^image\//)) {
+    console.log(
+      `Fetched new image assets and stored in ${DYNAMIC_CACHE_NAME}`,
+      response
+    )
+    await dynamicCache.put(request.url, response.clone())
   }
+  return response
+  // TODO: return fallback page html
+  // } catch (err) {
+  //   if (request.url.match(/\.html$/)) {
+  //     return caches.match('/pages/fallback.html')
+  //   } else throw err
+  // }
 }
