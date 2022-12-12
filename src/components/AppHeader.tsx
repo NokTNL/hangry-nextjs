@@ -1,18 +1,29 @@
 import {
   Center,
+  Circle,
   Flex,
   Heading,
   HStack,
   Icon,
   Spacer,
   Text,
+  VisuallyHidden,
 } from '@chakra-ui/react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useContext } from 'react'
 import CartSVG from 'src/assets/cart.svg'
 import NextJsPNG from 'src/assets/nextjs.png'
+import { CartContext } from 'src/store/CartContext'
 
 export function AppHeader() {
+  const { state: cartState } = useContext(CartContext)
+
+  const numberOfItems = cartState.items.reduce(
+    (total, item) => total + item.quantity,
+    0
+  )
+
   return (
     <header
       style={{
@@ -38,6 +49,19 @@ export function AppHeader() {
         <Spacer />
         <Center as={Link} href="/cart">
           <Icon as={CartSVG} fontSize="35px" color="white" />
+          <Circle
+            bgColor={'red.400'}
+            size="18px"
+            color="white"
+            fontSize="13px"
+            fontWeight={700}
+            justifyContent={'center'}
+            position="relative"
+            bottom="10px"
+          >
+            <VisuallyHidden>Cart item count: {numberOfItems}</VisuallyHidden>
+            <Text aria-hidden>{numberOfItems}</Text>
+          </Circle>
         </Center>
       </Flex>
     </header>
