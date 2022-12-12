@@ -2,7 +2,8 @@ import StoresPage, { getStaticProps } from 'pages/stores'
 import { STORE_DB } from 'db/db'
 import { render, screen } from '@testing-library/react'
 
-describe('/stores page - Unit tests', () => {
+describe('Stores page', () => {
+  // TODO: move server generated pages tests to another file?
   test('Get the correct page props', () => {
     const pageProps = getStaticProps()
     expect(pageProps.props.stores).toEqual(STORE_DB)

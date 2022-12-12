@@ -11,7 +11,7 @@ type GroupedItemsByStore = {
 export function groupItemsByStore(
   cartItems: CartItemType[]
 ): GroupedItemsByStore {
-  const groupedStores = [] as GroupedItemsByStore
+  const groupedStores: GroupedItemsByStore = []
 
   for (const cartItem of cartItems) {
     let storeFound = false

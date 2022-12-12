@@ -12,22 +12,17 @@ export type CartItemType = {
   quantity: number
 }
 
-export type CartContextState = ReturnType<
-  typeof getContextDefaultValue
->['state']
-
-export type CartProviderProps = {
-  initialState?: CartContextState
-  spyContextValues?: {
-    state?: CartContextState
-    dispatch?: (action: CartActionTypes) => void
+export type CartContextType = {
+  state: {
+    items: CartItemType[]
   }
+  dispatch: (action: CartActionTypes) => void
 }
 
 export type CartActionTypes =
   | {
       type: 'INITIAL_SYNC'
-      payload: CartContextState
+      payload: CartContextType['state']
     }
   | {
       type: 'ADD_ITEM'
@@ -52,13 +47,11 @@ export type CartActionTypes =
 /**
  * Constants
  */
-export const LOCAL_STORAGE_KEY = 'hangry-nextjs-cart'
+export const LOCAL_STORAGE_KEY = 'hangry-nextjs-cart' as const
 
-export function getContextDefaultValue() {
-  return {
-    state: {
-      items: [] as CartItemType[],
-    },
-    dispatch: (action: CartActionTypes) => {},
-  }
+export const CART_CONTEXT_DEFAULT_VALUE: CartContextType = {
+  state: {
+    items: [],
+  },
+  dispatch: () => {},
 }

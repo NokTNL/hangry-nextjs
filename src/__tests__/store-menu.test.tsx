@@ -3,11 +3,9 @@ import userEvent from '@testing-library/user-event'
 import StoreMenuPage, {
   getStaticPaths,
   getStaticProps,
-  StaticPropsType,
+  StoreMenuStaticProps,
 } from 'pages/stores/[storeId]'
-import App from 'pages/_app'
-import { CartProvider } from 'src/store/CartContext'
-import { getContextDefaultValue, LOCAL_STORAGE_KEY } from 'src/store/constants'
+import { wrap } from 'src/__mocks__/utils'
 
 const MOCK_STORE_DB = [
   {
@@ -57,6 +55,7 @@ const MOCK_PAGE_PROPS_STARBUCKS = {
 }
 
 describe('Store Menu Page', () => {
+  // TODO: move server generated pages tests to another file?
   test('Get correct paths from getStaticPaths', () => {
     const getStaticPathResult = getStaticPaths(
       {},
@@ -86,7 +85,7 @@ describe('Store Menu Page', () => {
     }
     const pageProps = getStaticProps(MOCK_CONTEXT, {
       mockDB: MOCK_STORE_DB,
-    }) as { props: StaticPropsType }
+    }) as { props: StoreMenuStaticProps }
 
     expect(pageProps.props).toEqual(MOCK_PAGE_PROPS_STARBUCKS)
   })
@@ -102,11 +101,7 @@ describe('Store Menu Page', () => {
     }).toThrow()
   })
   test('Renders the menu items details as buttons', () => {
-    render(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      <App Component={StoreMenuPage} pageProps={MOCK_PAGE_PROPS_STARBUCKS} />
-    )
+    render(wrap(StoreMenuPage, MOCK_PAGE_PROPS_STARBUCKS))
 
     const capuccinoButton = screen.getByRole('button', { name: /Cappucino/i })
     const expressoButton = screen.getByRole('button', { name: /Expresso/i })
@@ -124,148 +119,14 @@ describe('Store Menu Page', () => {
     expect(within(capuccinoButton).getByText(/£3\.50/)).toBeInTheDocument()
     expect(within(expressoButton).getByText(/£2\.00/)).toBeInTheDocument()
   })
-
-  test.skip('Different item clicked, add one item to cart', async () => {
-    const spyContextValues = {
-      state: {
-        ...getContextDefaultValue().state,
-        items: [],
-      },
-    }
-
-    const user = userEvent.setup()
-    render(
-      <CartProvider spyContextValues={spyContextValues}>
-        <StoreMenuPage {...MOCK_PAGE_PROPS_STARBUCKS} />
-      </CartProvider>
-    )
-
-    await user.click(screen.getByText(/Cappucino/))
-    await user.click(screen.getByText(/Expresso/))
-
-    expect(spyContextValues.state.items).toEqual([
-      {
-        store: {
-          id: '1',
-          name: 'Starbucks',
-        },
-        item: {
-          id: 'item1',
-          name: 'Cappucino',
-          price: 3.5,
-          photo: expect.anything(),
-        },
-        quantity: 1,
-      },
-      {
-        store: {
-          id: '1',
-          name: 'Starbucks',
-        },
-        item: {
-          id: 'item2',
-          name: 'Expresso',
-          price: 2,
-          photo: expect.anything(),
-        },
-        quantity: 1,
-      },
-    ])
-  })
-  test.skip(`Only increment item's quantity if item already exists`, async () => {
-    const spyContextValues = {
-      state: {
-        ...getContextDefaultValue().state,
-        items: [],
-      },
-    }
-
-    const user = userEvent.setup()
-    render(
-      <CartProvider spyContextValues={spyContextValues}>
-        <StoreMenuPage {...MOCK_PAGE_PROPS_STARBUCKS} />
-      </CartProvider>
-    )
-
-    // Click two times
-    await user.click(screen.getByText(/Cappucino/))
-    await user.click(screen.getByText(/Cappucino/))
-
-    expect(spyContextValues.state.items).toEqual([
-      {
-        store: {
-          id: '1',
-          name: 'Starbucks',
-        },
-        item: {
-          id: 'item1',
-          name: 'Cappucino',
-          price: 3.5,
-          photo: expect.anything(),
-        },
-        quantity: 2,
-      },
-    ])
-  })
-  test.skip(`Save cart state in local storage when adding items`, async () => {
-    // Mocking/Spying directly on localStorage is NOT possible with jsdom: https://stackoverflow.com/a/54157998
-    // !!! BUT you can call localStorage directly in your test code!
-    const spyContextValues = {
-      state: {
-        ...getContextDefaultValue().state,
-        items: [],
-      },
-    }
-
+  test('Add one item, shows confirmation modal', async () => {
     const user = userEvent.setup()
 
-    render(
-      <CartProvider spyContextValues={spyContextValues}>
-        <StoreMenuPage {...MOCK_PAGE_PROPS_STARBUCKS} />
-      </CartProvider>
-    )
-
-    await user.click(screen.getByText(/Cappucino/))
-
-    expect(localStorage.getItem(LOCAL_STORAGE_KEY)).toEqual(
-      JSON.stringify(spyContextValues.state)
-    )
-  })
-  test(`No items, show '0' on cart icon `, () => {
-    render(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      <App Component={StoreMenuPage} pageProps={MOCK_PAGE_PROPS_STARBUCKS} />
-    )
-
-    expect(screen.getByText(/cart item count/i)).toHaveTextContent('0')
-  })
-  test(`One menu item clicked, show '1' on cart icon`, async () => {
-    const user = userEvent.setup()
-
-    render(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      <App Component={StoreMenuPage} pageProps={MOCK_PAGE_PROPS_STARBUCKS} />
-    )
-
-    await user.click(screen.getByRole('button', { name: /Cappucino/ }))
-
-    expect(screen.getByText(/cart item count/i)).toHaveTextContent('1')
-  })
-  test(`One menu item x 1 + One menu item x 2, show '3' on cart icon`, async () => {
-    const user = userEvent.setup()
-
-    render(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      <App Component={StoreMenuPage} pageProps={MOCK_PAGE_PROPS_STARBUCKS} />
-    )
-
-    await user.click(screen.getByRole('button', { name: /Cappucino/ }))
-    await user.click(screen.getByRole('button', { name: /Expresso/ }))
+    render(wrap(StoreMenuPage, MOCK_PAGE_PROPS_STARBUCKS))
     await user.click(screen.getByRole('button', { name: /Expresso/ }))
 
-    expect(screen.getByText(/cart item count/i)).toHaveTextContent('3')
+    expect(screen.getByRole('status')).toHaveTextContent(
+      /Expresso added to cart/
+    )
   })
 })

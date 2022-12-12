@@ -1,8 +1,10 @@
 import { Heading, Center, Button, VStack, Text } from '@chakra-ui/react'
+import { GetStaticPropsResult } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
+import { CustomPageProps } from 'src/models/_app'
 
-export function getStaticProps() {
+export function getStaticProps(): GetStaticPropsResult<CustomPageProps> {
   return {
     props: {
       hideAppHeader: true,

@@ -13,7 +13,11 @@
     "no-empty-function": 0,
     "@typescript-eslint/no-unused-vars": [1, { "args": "none" }],
     "@typescript-eslint/no-empty-function": 0,
-    "@typescript-eslint/no-non-null-assertion": 2
+    "@typescript-eslint/no-non-null-assertion": 1,
+    "@typescript-eslint/consistent-type-assertions": [
+      1,
+      { "assertionStyle": "never" }
+    ]
   },
 
   "ignorePatterns": ["**/*.config.js"]

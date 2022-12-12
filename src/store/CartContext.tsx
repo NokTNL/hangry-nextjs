@@ -1,10 +1,14 @@
-import { useContext, useEffect } from 'react'
-import { createContext, PropsWithChildren, useReducer } from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useReducer,
+} from 'react'
 import {
   CartActionTypes,
-  CartContextState,
-  CartProviderProps,
-  getContextDefaultValue,
+  CartContextType,
+  CART_CONTEXT_DEFAULT_VALUE,
   LOCAL_STORAGE_KEY,
 } from './constants'
 
@@ -12,15 +16,13 @@ import {
  * Context
  */
 
-export const CartContext = createContext(getContextDefaultValue())
+export const CartContext = createContext(CART_CONTEXT_DEFAULT_VALUE)
 
-export function CartProvider({
-  children,
-  spyContextValues,
-}: PropsWithChildren & CartProviderProps) {
-  const initialState = spyContextValues?.state ?? getContextDefaultValue().state
-
-  const [state, dispatch] = useReducer(cartReducer, initialState)
+export function CartProvider({ children }: PropsWithChildren) {
+  const [state, dispatch] = useReducer(
+    cartReducer,
+    CART_CONTEXT_DEFAULT_VALUE.state
+  )
 
   // Initial Sync from Local Storage
   useEffect(() => {
@@ -33,15 +35,8 @@ export function CartProvider({
     }
   }, [])
 
-  // Spying context's value
-  useEffect(() => {
-    if (spyContextValues?.state) spyContextValues.state = state
-  })
-
-  const contextDispatch = dispatch
-
   return (
-    <CartContext.Provider value={{ state, dispatch: contextDispatch }}>
+    <CartContext.Provider value={{ state, dispatch }}>
       {children}
     </CartContext.Provider>
   )
@@ -52,9 +47,9 @@ export function CartProvider({
  */
 
 export function cartReducer(
-  state: CartContextState,
+  state: CartContextType['state'],
   action: CartActionTypes
-): CartContextState {
+): CartContextType['state'] {
   let newState = { ...state }
 
   switch (action.type) {

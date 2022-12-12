@@ -8,11 +8,11 @@ import {
 import Head from 'next/head'
 import { MenuItem } from 'src/components/stores/MenuItem'
 
-type ParamsType = {
+type StoreMenuParams = {
   storeId: string
 }
 
-export type StaticPropsType = {
+export type StoreMenuStaticProps = {
   storeId: string
   storeName: string
   menu: MenuItemType[]
@@ -23,7 +23,7 @@ export const getStaticPaths = (
   testUtils?: {
     mockDB?: typeof STORE_DB
   }
-): GetStaticPathsResult<ParamsType> => {
+): GetStaticPathsResult<StoreMenuParams> => {
   const storeDB = testUtils?.mockDB ?? STORE_DB
   return {
     paths: storeDB.map(store => ({
@@ -37,11 +37,11 @@ export const getStaticPaths = (
 }
 
 export const getStaticProps = (
-  context: GetStaticPropsContext<ParamsType>,
+  context: GetStaticPropsContext<StoreMenuParams>,
   testUtils?: {
     mockDB?: typeof STORE_DB
   }
-): GetStaticPropsResult<StaticPropsType> => {
+): GetStaticPropsResult<StoreMenuStaticProps> => {
   const storeDB = testUtils?.mockDB ?? STORE_DB
 
   const targetStoreId = context.params?.storeId
@@ -67,7 +67,7 @@ export default function StoreMenuPage({
   menu,
   storeName,
   storeId,
-}: StaticPropsType) {
+}: StoreMenuStaticProps) {
   return (
     <>
       <Head>
