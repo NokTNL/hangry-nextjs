@@ -11,10 +11,15 @@ const customJestConfig = {
   testEnvironment: 'jest-environment-jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'], // extending for jest-dom custom matchers
 
-  // For mocking SVGR objects
-  // See https://github.com/vercel/next.js/issues/36682 for the original issue and this PR (https://github.com/vercel/next.js/pull/36787/files) on next/jest closed this issue
+  // to prevent non-test files from being interpreted as test files
+  testRegex: '\\.test\\.[jt]sx?$',
+
   moduleNameMapper: {
-    '^.+\\.(svg)$': require.resolve('./src/__mocks__/svg.js'),
+    // For mocking SVGR objects
+    // See https://github.com/vercel/next.js/issues/36682 for the original issue and this PR (https://github.com/vercel/next.js/pull/36787/files) on next/jest closed this issue
+    '^.+\\.(svg)$': require.resolve('./__tests__/__mocks__/svg.js'),
+    // Namespaced absolute import
+    '^@/(.*)$': '<rootDir>/$1',
   },
 }
 

@@ -1,11 +1,11 @@
 import { AppWrapper } from 'pages/_app'
-import { CustomPageProps } from 'src/models/_app'
+import { CustomPageProps } from '@/src/models/_app'
 
 /**
  * Wrap a component with `AppWrapper` and pass page props in
  * @type `P` Page props type
  */
-export function wrap<P>(
+export function wrapPage<P>(
   Component: React.ComponentType<P>,
   pageProps: CustomPageProps & P
 ) {

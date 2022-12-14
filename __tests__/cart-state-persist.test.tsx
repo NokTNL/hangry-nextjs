@@ -2,10 +2,10 @@ import { render, screen } from '@testing-library/react'
 // import { CartProvider } from './CartContext'
 // import { getContextDefaultValue, LOCAL_STORAGE_KEY } from './constants'
 import userEvent from '@testing-library/user-event'
-import { wrap } from 'src/__mocks__/utils'
+import { wrapPage } from '__tests__/__mocks__/utils'
 import StoreMenuPage from 'pages/stores/[storeId]'
 import { useContext } from 'react'
-import { CartContext } from 'src/store/CartContext'
+import { CartContext } from '@/src/store/CartContext'
 
 // const MOCK_SOME_ITEMS_INIT_STATE = {
 //   items: [

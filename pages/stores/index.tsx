@@ -1,6 +1,6 @@
 import { InferGetStaticPropsType } from 'next'
 import Head from 'next/head'
-import { StoreItem } from 'src/components/stores/StoreItem'
+import { StoreItem } from '@/src/components/stores/StoreItem'
 
 import { Heading, VStack } from '@chakra-ui/react'
 import { STORE_DB } from 'db/db'

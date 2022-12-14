@@ -2,10 +2,10 @@ import { ChakraProvider } from '@chakra-ui/react'
 import type { AppProps } from 'next/app'
 import Script from 'next/script'
 import { PropsWithChildren } from 'react'
-import { AppHeader } from 'src/components/AppHeader'
-import { DocumentHead } from 'src/components/DocumentHead'
-import { AppWrapperProps, CustomPageProps } from 'src/models/_app'
-import { CartProvider } from 'src/store/CartContext'
+import { AppHeader } from '@/src/components/AppHeader'
+import { DocumentHead } from '@/src/components/DocumentHead'
+import { AppWrapperProps, CustomPageProps } from '@/src/models/_app'
+import { CartProvider } from '@/src/store/CartContext'
 
 export default function App(
   {

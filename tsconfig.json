@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": ".", // For absolute path imports
+    "paths": {
+      // For namespaced absolute path imports
+      "@/*": ["*"]
+    },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,

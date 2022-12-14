@@ -5,7 +5,7 @@ import StoreMenuPage, {
   getStaticProps,
   StoreMenuStaticProps,
 } from 'pages/stores/[storeId]'
-import { wrap } from 'src/__mocks__/utils'
+import { wrapPage } from '__tests__/__mocks__/utils'
 
 const MOCK_STORE_DB = [
   {
@@ -101,7 +101,7 @@ describe('Store Menu Page', () => {
     }).toThrow()
   })
   test('Renders the menu items details as buttons', () => {
-    render(wrap(StoreMenuPage, MOCK_PAGE_PROPS_STARBUCKS))
+    render(wrapPage(StoreMenuPage, MOCK_PAGE_PROPS_STARBUCKS))
 
     const capuccinoButton = screen.getByRole('button', { name: /Cappucino/i })
     const expressoButton = screen.getByRole('button', { name: /Expresso/i })
@@ -122,7 +122,7 @@ describe('Store Menu Page', () => {
   test('Add one item, shows confirmation modal', async () => {
     const user = userEvent.setup()
 
-    render(wrap(StoreMenuPage, MOCK_PAGE_PROPS_STARBUCKS))
+    render(wrapPage(StoreMenuPage, MOCK_PAGE_PROPS_STARBUCKS))
     await user.click(screen.getByRole('button', { name: /Expresso/ }))
 
     expect(screen.getByRole('status')).toHaveTextContent(

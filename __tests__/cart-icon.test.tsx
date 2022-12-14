@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import StoreMenuPage from 'pages/stores/[storeId]'
-import { wrap } from 'src/__mocks__/utils'
+import { wrapPage } from '__tests__/__mocks__/utils'
 import userEvent from '@testing-library/user-event'
 
 const MOCK_PAGE_PROPS_STARBUCKS = {
@@ -24,14 +24,14 @@ const MOCK_PAGE_PROPS_STARBUCKS = {
 
 describe(`Cart icon`, () => {
   test(`No items, show '0' on cart icon `, () => {
-    render(wrap(StoreMenuPage, MOCK_PAGE_PROPS_STARBUCKS))
+    render(wrapPage(StoreMenuPage, MOCK_PAGE_PROPS_STARBUCKS))
 
     expect(screen.getByText(/cart item count/i)).toHaveTextContent('0')
   })
   test(`One menu item clicked, show '1' on cart icon`, async () => {
     const user = userEvent.setup()
 
-    render(wrap(StoreMenuPage, MOCK_PAGE_PROPS_STARBUCKS))
+    render(wrapPage(StoreMenuPage, MOCK_PAGE_PROPS_STARBUCKS))
 
     await user.click(screen.getByRole('button', { name: /Cappucino/ }))
 
@@ -40,7 +40,7 @@ describe(`Cart icon`, () => {
   test(`One menu item x 1 + One menu item x 2, show '3' on cart icon`, async () => {
     const user = userEvent.setup()
 
-    render(wrap(StoreMenuPage, MOCK_PAGE_PROPS_STARBUCKS))
+    render(wrapPage(StoreMenuPage, MOCK_PAGE_PROPS_STARBUCKS))
 
     await user.click(screen.getByRole('button', { name: /Cappucino/ }))
     await user.click(screen.getByRole('button', { name: /Expresso/ }))

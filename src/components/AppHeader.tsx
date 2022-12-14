@@ -12,9 +12,9 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import { useContext } from 'react'
-import CartSVG from 'src/assets/cart.svg'
-import NextJsPNG from 'src/assets/nextjs.png'
-import { CartContext } from 'src/store/CartContext'
+import CartSVG from '@/src/assets/cart.svg'
+import NextJsPNG from '@/src/assets/nextjs.png'
+import { CartContext } from '@/src/store/CartContext'
 
 export function AppHeader() {
   const { state: cartState } = useContext(CartContext)
