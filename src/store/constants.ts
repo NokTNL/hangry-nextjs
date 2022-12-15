@@ -1,4 +1,4 @@
-import { MenuItemType } from 'db/db'
+import { MenuItemType } from '@/db/dummyDb'
 
 /**
  * Types

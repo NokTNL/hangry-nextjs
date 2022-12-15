@@ -7,7 +7,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import Image from 'next/image'
-import { MenuItemType } from 'db/db'
+import { MenuItemType } from '@/db/dummyDb'
 import React from 'react'
 import { useCart } from '@/src/store/CartContext'
 

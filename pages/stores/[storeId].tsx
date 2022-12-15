@@ -1,5 +1,5 @@
 import { Heading, VStack } from '@chakra-ui/react'
-import { MenuItemType, STORE_DB } from 'db/db'
+import { MenuItemType, STORE_DB } from '@/db/dummyDb'
 import {
   GetStaticPathsResult,
   GetStaticPropsContext,

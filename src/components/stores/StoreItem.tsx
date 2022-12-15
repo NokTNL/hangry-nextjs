@@ -1,5 +1,5 @@
 import { Box, Card, CardBody, HStack, Square, Text } from '@chakra-ui/react'
-import { StoreType } from 'db/db'
+import { StoreType } from '@/db/dummyDb'
 import Image from 'next/image'
 import Link from 'next/link'
 

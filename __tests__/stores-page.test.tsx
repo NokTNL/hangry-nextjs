@@ -1,5 +1,5 @@
 import StoresPage, { getStaticProps } from 'pages/stores'
-import { STORE_DB } from 'db/db'
+import { STORE_DB } from '@/db/dummyDb'
 import { render, screen } from '@testing-library/react'
 
 describe('Stores page', () => {

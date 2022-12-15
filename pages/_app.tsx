@@ -30,7 +30,8 @@ export function AppWrapper({
         <DocumentHead />
 
         {/* Service Worker */}
-        <Script src="/setupSW.js" />
+        {/* Disabled for now */}
+        {/* <Script src="/setupSW.js" /> */}
 
         {pageProps.hideAppHeader ?? <AppHeader />}
         {/* vvvv Page component will go to here */}
