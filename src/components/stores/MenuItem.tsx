@@ -7,12 +7,12 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import Image from 'next/image'
-import { MenuItemType } from '@/db/dummyDb'
 import React from 'react'
 import { useCart } from '@/src/store/CartContext'
+import { StoreMenuItem } from '@/src/models/db'
 
 type MenuItemProps = {
-  item: MenuItemType
+  item: StoreMenuItem
   storeDetails: {
     id: string
     name: string
@@ -23,7 +23,7 @@ export function MenuItem({ item, storeDetails }: MenuItemProps) {
   const { dispatch: cartDispatch } = useCart()
   const toast = useToast()
 
-  const handleAddItem = (item: MenuItemType) => {
+  const handleAddItem = (item: StoreMenuItem) => {
     cartDispatch({
       type: 'ADD_ITEM',
       payload: {

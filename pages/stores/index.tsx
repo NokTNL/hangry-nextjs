@@ -2,34 +2,31 @@ import { StoreItem } from '@/src/components/stores/StoreItem'
 import { GetStaticPropsResult } from 'next'
 import Head from 'next/head'
 
-import { StoresData, storesSchema } from '@/src/models/db'
+import { StoreData, storeSchema } from '@/src/models/db'
 import { Heading, VStack } from '@chakra-ui/react'
-import { MongoClient } from 'mongodb'
+import { connectMongoDB } from '@/src/utils/db-utils'
+import { z } from 'zod'
 
 type StoresPageStaticProps = {
-  stores: StoresData
+  stores: StoreData[]
 }
 
 export async function getStaticProps(): Promise<
   GetStaticPropsResult<StoresPageStaticProps>
 > {
-  // 🤯 remove credentials from here!
-  const client = await MongoClient.connect(
-    `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_PASSWORD}@cluster0.woa4fgk.mongodb.net/?retryWrites=true&w=majority`
-  )
-  const db = client.db('hangry-nextjs')
-  const collection = db.collection('stores')
-  const storesData = (await collection.find().toArray()).map(
-    ({ _id, ...data }) => ({ id: _id.toString(), ...data })
-  )
+  const stores = await connectMongoDB(async db => {
+    const collection = db.collection('stores')
+    const storesData = (await collection.find().toArray()).map(
+      ({ _id, ...data }) => ({ id: _id.toString(), ...data })
+    )
 
-  const parsedStores = storesSchema.parse(storesData)
-
-  await client.close()
+    const parsedStores = z.array(storeSchema).parse(storesData)
+    return parsedStores
+  })
 
   return {
     props: {
-      stores: parsedStores,
+      stores: stores,
     },
   }
 }

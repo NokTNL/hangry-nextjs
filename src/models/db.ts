@@ -1,22 +1,18 @@
 import { z } from 'zod'
 
-export const storeMenuSchema = z.array(
-  z.object({
-    id: z.string(),
-    itemName: z.string(),
-    price: z.number(),
-    photo: z.string(),
-  })
-)
+export const storeMenuItemSchema = z.object({
+  id: z.string(),
+  itemName: z.string(),
+  price: z.number(),
+  photo: z.string(),
+})
 
-export const storesSchema = z.array(
-  z.object({
-    id: z.string(),
-    logoImage: z.string(),
-    name: z.string(),
-    menu: storeMenuSchema,
-  })
-)
+export const storeSchema = z.object({
+  id: z.string(),
+  logoImage: z.string(),
+  name: z.string(),
+  menu: z.array(storeMenuItemSchema),
+})
 
-export type StoreMenu = z.infer<typeof storeMenuSchema>
-export type StoresData = z.infer<typeof storesSchema>
+export type StoreMenuItem = z.infer<typeof storeMenuItemSchema>
+export type StoreData = z.infer<typeof storeSchema>
