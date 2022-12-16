@@ -1,4 +1,4 @@
-import { StoreMenuItem } from '../models/db'
+import { StoreMenuItemType } from '../models/db'
 
 /**
  * Types
@@ -8,7 +8,9 @@ export type CartItemType = {
     id: string
     name: string
   }
-  item: Omit<StoreMenuItem, 'itemName'> & { name: StoreMenuItem['itemName'] } // Renaming property
+  item: Omit<StoreMenuItemType, 'itemName'> & {
+    name: StoreMenuItemType['itemName']
+  } // Renaming property
   quantity: number
 }
 

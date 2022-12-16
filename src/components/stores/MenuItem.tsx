@@ -9,10 +9,10 @@ import {
 import Image from 'next/image'
 import React from 'react'
 import { useCart } from '@/src/store/CartContext'
-import { StoreMenuItem } from '@/src/models/db'
+import { StoreMenuItemType } from '@/src/models/db'
 
 type MenuItemProps = {
-  item: StoreMenuItem
+  item: StoreMenuItemType
   storeDetails: {
     id: string
     name: string
@@ -23,7 +23,7 @@ export function MenuItem({ item, storeDetails }: MenuItemProps) {
   const { dispatch: cartDispatch } = useCart()
   const toast = useToast()
 
-  const handleAddItem = (item: StoreMenuItem) => {
+  const handleAddItem = (item: StoreMenuItemType) => {
     cartDispatch({
       type: 'ADD_ITEM',
       payload: {

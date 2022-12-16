@@ -13,7 +13,5 @@ export async function connectMongoDB<R>(callback: (db: Db) => Promise<R>) {
 
   const resultData = await callback(db)
 
-  void client.close().then(() => console.log('Client closed'))
-
   return resultData
 }

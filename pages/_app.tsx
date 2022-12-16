@@ -29,9 +29,8 @@ export function AppWrapper({
       <CartProvider>
         <DocumentHead />
 
-        {/* Service Worker */}
-        {/* Disabled for now */}
-        {/* <Script src="/setupSW.js" /> */}
+        {/* Service Worker: only enabled for production */}
+        {process.env.NODE_ENV === 'production' && <Script src="/setupSW.js" />}
 
         {pageProps.hideAppHeader ?? <AppHeader />}
         {/* vvvv Page component will go to here */}

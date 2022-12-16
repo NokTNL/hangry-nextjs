@@ -1,5 +1,5 @@
 import { MenuItem } from '@/src/components/stores/MenuItem'
-import { StoreMenuItem, storeSchema } from '@/src/models/db'
+import { StoreMenuItemType, storeSchema } from '@/src/models/db'
 import { connectMongoDB } from '@/src/utils/db-utils'
 import { Heading, VStack } from '@chakra-ui/react'
 import { ObjectId } from 'mongodb'
@@ -17,7 +17,7 @@ type StoreMenuParams = {
 export type StoreMenuStaticProps = {
   storeId: string
   storeName: string
-  menu: StoreMenuItem[]
+  menu: StoreMenuItemType[]
 }
 
 export const getStaticPaths = async (): Promise<

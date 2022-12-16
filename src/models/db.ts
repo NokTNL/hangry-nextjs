@@ -14,5 +14,5 @@ export const storeSchema = z.object({
   menu: z.array(storeMenuItemSchema),
 })
 
-export type StoreMenuItem = z.infer<typeof storeMenuItemSchema>
-export type StoreData = z.infer<typeof storeSchema>
+export type StoreMenuItemType = z.infer<typeof storeMenuItemSchema>
+export type StoreType = z.infer<typeof storeSchema>

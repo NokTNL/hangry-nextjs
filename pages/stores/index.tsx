@@ -2,13 +2,13 @@ import { StoreItem } from '@/src/components/stores/StoreItem'
 import { GetStaticPropsResult } from 'next'
 import Head from 'next/head'
 
-import { StoreData, storeSchema } from '@/src/models/db'
+import { StoreType, storeSchema } from '@/src/models/db'
 import { Heading, VStack } from '@chakra-ui/react'
 import { connectMongoDB } from '@/src/utils/db-utils'
 import { z } from 'zod'
 
 type StoresPageStaticProps = {
-  stores: StoreData[]
+  stores: StoreType[]
 }
 
 export async function getStaticProps(): Promise<
