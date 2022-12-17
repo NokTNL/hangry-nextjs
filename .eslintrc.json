@@ -20,5 +20,5 @@
     ]
   },
 
-  "ignorePatterns": ["**/*.config.js"]
+  "ignorePatterns": ["**/*.config.js", "jest.setup.js"]
 }

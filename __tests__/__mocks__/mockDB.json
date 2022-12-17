@@ -1,0 +1,40 @@
+[
+  {
+    "id": "639b183136d87ed1b334219b",
+    "logoImage": "/img/starbucks.svg",
+    "name": "Starbucks",
+    "menu": [
+      {
+        "id": "item1",
+        "itemName": "Cappuccino",
+        "price": 3.5,
+        "photo": "/img/starbucks-cappuccino.jpeg"
+      },
+      {
+        "id": "item2",
+        "itemName": "Expresso",
+        "price": 2,
+        "photo": "/img/starbucks-expresso.webp"
+      }
+    ]
+  },
+  {
+    "id": "639b183136d87ed1b334219c",
+    "logoImage": "/img/burger-king.svg",
+    "name": "Burger King",
+    "menu": [
+      {
+        "id": "item10",
+        "itemName": "Chicken Royale",
+        "price": 7.49,
+        "photo": "/img/chicken-royle.png"
+      }
+    ]
+  },
+  {
+    "id": "639b183136d87ed1b334219d",
+    "logoImage": "/img/mcdonalds.svg",
+    "name": "McDonalds",
+    "menu": []
+  }
+]

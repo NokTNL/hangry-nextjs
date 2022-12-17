@@ -2,9 +2,9 @@ import { StoreItem } from '@/src/components/stores/StoreItem'
 import { GetStaticPropsResult } from 'next'
 import Head from 'next/head'
 
-import { StoreType, storeSchema } from '@/src/models/db'
+import { storeSchema, StoreType } from '@/src/models/db'
+import { MyMongoClient } from '@/src/utils/MyMongoClient'
 import { Heading, VStack } from '@chakra-ui/react'
-import { connectMongoDB } from '@/src/utils/db-utils'
 import { z } from 'zod'
 
 type StoresPageStaticProps = {
@@ -14,19 +14,17 @@ type StoresPageStaticProps = {
 export async function getStaticProps(): Promise<
   GetStaticPropsResult<StoresPageStaticProps>
 > {
-  const stores = await connectMongoDB(async db => {
-    const collection = db.collection('stores')
-    const storesData = (await collection.find().toArray()).map(
-      ({ _id, ...data }) => ({ id: _id.toString(), ...data })
-    )
+  const db = await MyMongoClient.getDb()
+  const collection = db.collection('stores')
 
-    const parsedStores = z.array(storeSchema).parse(storesData)
-    return parsedStores
-  })
+  const storesData = (await collection.find().toArray()).map(
+    ({ _id, ...data }) => ({ id: _id.toString(), ...data })
+  )
+  const parsedStores = z.array(storeSchema).parse(storesData)
 
   return {
     props: {
-      stores: stores,
+      stores: parsedStores,
     },
   }
 }

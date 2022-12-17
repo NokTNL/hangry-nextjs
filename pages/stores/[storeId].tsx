@@ -1,6 +1,6 @@
 import { MenuItem } from '@/src/components/stores/MenuItem'
 import { StoreMenuItemType, storeSchema } from '@/src/models/db'
-import { connectMongoDB } from '@/src/utils/db-utils'
+import { MyMongoClient } from '@/src/utils/MyMongoClient'
 import { Heading, VStack } from '@chakra-ui/react'
 import { ObjectId } from 'mongodb'
 import {
@@ -23,17 +23,14 @@ export type StoreMenuStaticProps = {
 export const getStaticPaths = async (): Promise<
   GetStaticPathsResult<StoreMenuParams>
 > => {
-  const storeIds = await connectMongoDB(async db => {
-    const collection = db.collection('stores')
-    const rawStoresData = await collection
-      //                        vvv 'turns on' projection of the _id field
-      .find({}, { projection: { _id: true } })
-      .toArray()
+  const db = await MyMongoClient.getDb()
+  const collection = db.collection('stores')
+  const rawStoresData = await collection
+    //                        vvv 'turns on' projection of the _id field
+    .find({}, { projection: { _id: true } })
+    .toArray()
 
-    const storeIds = rawStoresData.map(({ _id }) => _id.toString())
-
-    return storeIds
-  })
+  const storeIds = rawStoresData.map(({ _id }) => _id.toString())
 
   return {
     paths: storeIds.map(id => ({
@@ -55,24 +52,22 @@ export const getStaticProps = async (
     throw Error(`URL does not have [storeId] param`)
   }
 
-  const store = await connectMongoDB(async db => {
-    const collection = db.collection('stores')
-    const rawTargetStore = await collection.findOne({
-      _id: new ObjectId(targetStoreId),
-    })
-    if (!rawTargetStore) {
-      throw Error(`The store with id '${targetStoreId}' cannot be found `)
-    }
-    const targetStore = { ...rawTargetStore, id: rawTargetStore._id.toString() }
-    const parsedStore = storeSchema.parse(targetStore)
-    return parsedStore
+  const db = await MyMongoClient.getDb()
+  const collection = db.collection('stores')
+  const rawTargetStore = await collection.findOne({
+    _id: new ObjectId(targetStoreId),
   })
+  if (!rawTargetStore) {
+    throw Error(`The store with id '${targetStoreId}' cannot be found `)
+  }
+  const targetStore = { ...rawTargetStore, id: rawTargetStore._id.toString() }
+  const parsedStore = storeSchema.parse(targetStore)
 
   return {
     props: {
       storeId: targetStoreId,
-      storeName: store.name,
-      menu: store.menu,
+      storeName: parsedStore.name,
+      menu: parsedStore.menu,
     },
   }
 }
