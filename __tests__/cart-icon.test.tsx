@@ -3,7 +3,7 @@ import StoreMenuPage, {
   getStaticProps,
   StoreMenuStaticProps,
 } from 'pages/stores/[storeId]'
-import { wrapPage } from '__tests__/__mocks__/utils'
+import { wrapPage } from '@/__tests__/mocks/utils'
 import userEvent from '@testing-library/user-event'
 
 describe(`Cart icon`, () => {

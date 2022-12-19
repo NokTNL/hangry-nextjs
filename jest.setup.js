@@ -1,5 +1,5 @@
-import '@testing-library/jest-dom/extend-expect'
-import mockDB from '@/__tests__/__mocks__/mockDB'
+import '@testing-library/jest-dom/extend-expect' // extending for jest-dom custom matchers
+import mockDB from '@/__tests__/mocks/mockDB'
 import { TextEncoder, TextDecoder } from 'util'
 
 // MongoDB: Providing an implementation for TextEncoder & TextDecoder
@@ -8,7 +8,7 @@ global.TextDecoder = TextDecoder
 
 // TextEncoder & TextDecoder needs to be defined before using MongoClient
 const { MyMongoClient } = require('./src/utils/MyMongoClient')
-const { MockMongoServer } = require('./__tests__/__mocks__/MockMongoServer')
+const { MockMongoServer } = require('./__tests__/mocks/MockMongoServer')
 
 beforeAll(async () => {
   await MockMongoServer.init()

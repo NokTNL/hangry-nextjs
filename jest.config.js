@@ -6,8 +6,9 @@ const nextJest = require('next/jest')
 const customJestConfig = {
   // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
   moduleDirectories: ['node_modules', '<rootDir>/'],
+
   testEnvironment: 'jest-environment-jsdom',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'], // extending for jest-dom custom matchers
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 
   // to prevent non-test files from being interpreted as test files
   testRegex: '\\.test\\.[jt]sx?$',
@@ -15,7 +16,7 @@ const customJestConfig = {
   moduleNameMapper: {
     // For mocking SVGR objects
     // See https://github.com/vercel/next.js/issues/36682 for the original issue and this PR (https://github.com/vercel/next.js/pull/36787/files) on next/jest closed this issue
-    '^.+\\.(svg)$': require.resolve('./__tests__/__mocks__/svg.js'),
+    '^.+\\.(svg)$': require.resolve('./__tests__/mocks/svg.js'),
     // Namespaced absolute import
     '^@/(.*)$': '<rootDir>/$1',
     // Prevent errors when using MongoDB memory server

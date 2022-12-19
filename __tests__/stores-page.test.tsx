@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import StoresPage, { getStaticProps } from 'pages/stores'
-import { wrapPage } from './__mocks__/utils'
+import { wrapPage } from './mocks/utils'
 
 describe('Stores page', () => {
   test('page renders list of links for stores correctly', async () => {

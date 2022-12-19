@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import StoreMenuPage, { getStaticProps } from 'pages/stores/[storeId]'
-import { wrapPage } from '__tests__/__mocks__/utils'
+import { wrapPage } from '@/__tests__/mocks/utils'
 
 describe('Store Menu Page', () => {
   test('Throws error if store Id does not exist', async () => {

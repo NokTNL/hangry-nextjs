@@ -5,7 +5,7 @@ import StoreMenuPage, {
   getStaticProps,
   StoreMenuStaticProps,
 } from 'pages/stores/[storeId]'
-import { wrapPage } from './__mocks__/utils'
+import { wrapPage } from './mocks/utils'
 
 describe('Menu & Cart functionality', () => {
   let StarbucksPageProps: StoreMenuStaticProps
