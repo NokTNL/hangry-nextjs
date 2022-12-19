@@ -10,6 +10,7 @@
   "plugins": ["@typescript-eslint", "jest-dom", "testing-library"],
 
   "rules": {
+    "@typescript-eslint/ban-ts-comment": 0,
     "no-empty-function": 0,
     "@typescript-eslint/no-unused-vars": [1, { "args": "none" }],
     "@typescript-eslint/no-empty-function": 0,

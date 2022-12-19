@@ -1,4 +1,11 @@
-Test database
+# Test Database
+
+## Using MongoDB Memory server
+
+https://github.com/nodkz/mongodb-memory-server
+https://github.com/nodkz/mongodb-memory-server/blob/master/packages/mongodb-memory-server-core/src/__tests__/singleDB.test.ts
+
+## Using local MongoDB instance (not recommended, hard to setup)
 
 Reference:
 https://attacomsian.com/blog/nodejs-mongodb-local-connection

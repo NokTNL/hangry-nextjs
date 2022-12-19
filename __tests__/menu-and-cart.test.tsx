@@ -1,50 +1,43 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import CartPage from 'pages/cart'
-import StoreMenuPage from 'pages/stores/[storeId]'
+import StoreMenuPage, {
+  getStaticProps,
+  StoreMenuStaticProps,
+} from 'pages/stores/[storeId]'
 import { wrapPage } from './__mocks__/utils'
 
-const MOCK_PAGE_PROPS = {
-  Starbucks: {
-    storeId: '1',
-    storeName: 'Starbucks',
-    menu: [
-      {
-        id: 'item1',
-        itemName: 'Cappucino',
-        price: 3.5,
-        photo: '/food-img-url-1',
-      },
-      {
-        id: 'item2',
-        itemName: 'Expresso',
-        price: 2,
-        photo: '/food-img-url-2',
-      },
-    ],
-  },
-  'Pret a Manger': {
-    storeId: '2',
-    storeName: 'Pret a Manger',
-    menu: [
-      {
-        id: 'item3',
-        itemName: 'Iced Latte',
-        price: 5.2,
-        photo: '/food-img-url-3',
-      },
-    ],
-  },
-}
-
 describe('Menu & Cart functionality', () => {
+  let StarbucksPageProps: StoreMenuStaticProps
+  let BKPageProps: StoreMenuStaticProps
+
+  beforeAll(async () => {
+    StarbucksPageProps = await getStaticProps({
+      params: { storeId: '111111111111111111111111' },
+    }).then(
+      // @ts-ignore
+      res => res.props
+    )
+    BKPageProps = await getStaticProps({
+      params: { storeId: '222222222222222222222222' },
+    }).then(
+      // @ts-ignore
+      res => res.props
+    )
+  })
   test(`Add one item, display the item's full details in the cart, quantity = 1`, async () => {
     const user = userEvent.setup()
 
-    const { rerender } = render(
-      wrapPage(StoreMenuPage, MOCK_PAGE_PROPS['Starbucks'])
+    const StarbucksPageProps = await getStaticProps({
+      params: { storeId: '111111111111111111111111' },
+    }).then(
+      // @ts-ignore
+      res => res.props
     )
-    await user.click(screen.getByRole('button', { name: /Cappucino/ }))
+
+    const { rerender } = render(wrapPage(StoreMenuPage, StarbucksPageProps))
+
+    await user.click(screen.getByRole('button', { name: /Cappuccino/ }))
 
     rerender(wrapPage(CartPage, {}))
 
@@ -53,28 +46,26 @@ describe('Menu & Cart functionality', () => {
       name: /Starbucks/i,
     })
     // Within Capuccino item
-    const cappucinoEl = within(starbucksEl).getByRole('listitem', {
-      name: /Cappucino/,
+    const CappuccinoEl = within(starbucksEl).getByRole('listitem', {
+      name: /Cappuccino/,
     })
-    expect(within(cappucinoEl).getByRole('img')).toHaveAttribute(
+    expect(within(CappuccinoEl).getByRole('img')).toHaveAttribute(
       'src',
       expect.stringMatching(/food-img-url-1/)
     )
-    expect(within(cappucinoEl).getByText(/£3\.50/)).toBeInTheDocument()
+    expect(within(CappuccinoEl).getByText(/£3\.50/)).toBeInTheDocument()
     expect(
-      within(cappucinoEl).getByRole('spinbutton', { name: /quantity/i })
+      within(CappuccinoEl).getByRole('spinbutton', { name: /quantity/i })
     ).toHaveValue('1')
   })
   test(`Add same item twice, increment item's quantity to 2`, async () => {
     const user = userEvent.setup()
 
-    const { rerender } = render(
-      wrapPage(StoreMenuPage, MOCK_PAGE_PROPS['Starbucks'])
-    )
+    const { rerender } = render(wrapPage(StoreMenuPage, StarbucksPageProps))
 
     // Click two times
-    await user.click(screen.getByRole('button', { name: /Cappucino/ }))
-    await user.click(screen.getByRole('button', { name: /Cappucino/ }))
+    await user.click(screen.getByRole('button', { name: /Cappuccino/ }))
+    await user.click(screen.getByRole('button', { name: /Cappuccino/ }))
 
     rerender(wrapPage(CartPage, {}))
 
@@ -83,22 +74,21 @@ describe('Menu & Cart functionality', () => {
       name: /Starbucks/i,
     })
     // Within Capuccino item
-    const cappucinoEl = within(starbucksEl).getByRole('listitem', {
-      name: /Cappucino/,
+    const CappuccinoEl = within(starbucksEl).getByRole('listitem', {
+      name: /Cappuccino/,
     })
     expect(
-      within(cappucinoEl).getByRole('spinbutton', { name: /quantity/i })
+      within(CappuccinoEl).getByRole('spinbutton', { name: /quantity/i })
     ).toHaveValue('2')
   })
   test('Added items from the same store grouped into one store, with all correct info', async () => {
     const user = userEvent.setup()
-    const { rerender } = render(
-      wrapPage(StoreMenuPage, MOCK_PAGE_PROPS['Starbucks'])
-    )
 
-    // 2 Cappucino, 3 Expresso
-    await user.click(screen.getByRole('button', { name: /Cappucino/ }))
-    await user.click(screen.getByRole('button', { name: /Cappucino/ }))
+    const { rerender } = render(wrapPage(StoreMenuPage, StarbucksPageProps))
+
+    // 2 Cappuccino, 3 Expresso
+    await user.click(screen.getByRole('button', { name: /Cappuccino/ }))
+    await user.click(screen.getByRole('button', { name: /Cappuccino/ }))
     await user.click(screen.getByRole('button', { name: /Expresso/ }))
     await user.click(screen.getByRole('button', { name: /Expresso/ }))
     await user.click(screen.getByRole('button', { name: /Expresso/ }))
@@ -109,17 +99,17 @@ describe('Menu & Cart functionality', () => {
       name: /Starbucks/i,
     })
 
-    // Cappucino item
-    const cappucinoEl = within(starbucksEl).getByRole('listitem', {
-      name: /Cappucino/,
+    // Cappuccino item
+    const CappuccinoEl = within(starbucksEl).getByRole('listitem', {
+      name: /Cappuccino/,
     })
-    expect(within(cappucinoEl).getByRole('img')).toHaveAttribute(
+    expect(within(CappuccinoEl).getByRole('img')).toHaveAttribute(
       'src',
       expect.stringMatching(/food-img-url-1/)
     )
-    expect(within(cappucinoEl).getByText(/£3\.50/)).toBeInTheDocument()
+    expect(within(CappuccinoEl).getByText(/£3\.50/)).toBeInTheDocument()
     expect(
-      within(cappucinoEl).getByRole('spinbutton', { name: /quantity/i })
+      within(CappuccinoEl).getByRole('spinbutton', { name: /quantity/i })
     ).toHaveValue('2')
 
     // Expresso item
@@ -139,17 +129,17 @@ describe('Menu & Cart functionality', () => {
     const user = userEvent.setup()
 
     // Add items in Starbucks page
-    const { rerender } = render(
-      wrapPage(StoreMenuPage, MOCK_PAGE_PROPS['Starbucks'])
-    )
-    await user.click(screen.getByRole('button', { name: /Cappucino/ }))
+
+    const { rerender } = render(wrapPage(StoreMenuPage, StarbucksPageProps))
+    await user.click(screen.getByRole('button', { name: /Cappuccino/ }))
     await user.click(screen.getByRole('button', { name: /Expresso/ }))
     await user.click(screen.getByRole('button', { name: /Expresso/ }))
 
-    // Add items in Pret a Manger page
-    rerender(wrapPage(StoreMenuPage, MOCK_PAGE_PROPS['Pret a Manger']))
-    await user.click(screen.getByRole('button', { name: /Iced Latte/ }))
-    await user.click(screen.getByRole('button', { name: /Iced Latte/ }))
+    // Add items in Burger King page
+
+    rerender(wrapPage(StoreMenuPage, BKPageProps))
+    await user.click(screen.getByRole('button', { name: /Chicken Royale/ }))
+    await user.click(screen.getByRole('button', { name: /Chicken Royale/ }))
 
     // Cart Page
     rerender(wrapPage(CartPage, {}))
@@ -160,7 +150,7 @@ describe('Menu & Cart functionality', () => {
     })
     expect(
       within(starbucksEl).getByRole('listitem', {
-        name: /Cappucino/,
+        name: /Cappuccino/,
       })
     ).toBeInTheDocument()
     expect(
@@ -169,28 +159,26 @@ describe('Menu & Cart functionality', () => {
       })
     ).toBeInTheDocument()
 
-    // Pret a Manger
-    const pretEl = screen.getByRole('listitem', {
-      name: /Pret a Manger/i,
+    // Burger King
+    const burgerKingeEl = screen.getByRole('listitem', {
+      name: /Burger King/i,
     })
     expect(
-      within(pretEl).getByRole('listitem', {
-        name: /Iced Latte/,
+      within(burgerKingeEl).getByRole('listitem', {
+        name: /Chicken Royale/,
       })
     ).toBeInTheDocument()
   })
   test('Spinbutton changes item quantity', async () => {
     const user = userEvent.setup()
 
-    const { rerender } = render(
-      wrapPage(StoreMenuPage, MOCK_PAGE_PROPS['Pret a Manger'])
-    )
+    const { rerender } = render(wrapPage(StoreMenuPage, BKPageProps))
 
-    await user.click(screen.getByRole('button', { name: /Iced Latte/ }))
+    await user.click(screen.getByRole('button', { name: /Chicken Royale/ }))
 
     rerender(wrapPage(CartPage, {}))
 
-    const icedLatteEl = screen.getByRole('listitem', { name: /Iced Latte/ })
+    const icedLatteEl = screen.getByRole('listitem', { name: /Chicken Royale/ })
     const icedLatteQuantityInput = within(icedLatteEl).getByRole('spinbutton', {
       name: /quantity/i,
     })
@@ -208,30 +196,28 @@ describe('Menu & Cart functionality', () => {
     const user = userEvent.setup()
 
     // Add items in Starbucks page
-    const { rerender } = render(
-      wrapPage(StoreMenuPage, MOCK_PAGE_PROPS['Starbucks'])
-    )
-    await user.click(screen.getByRole('button', { name: /Cappucino/ }))
+    const { rerender } = render(wrapPage(StoreMenuPage, StarbucksPageProps))
+    await user.click(screen.getByRole('button', { name: /Cappuccino/ }))
     await user.click(screen.getByRole('button', { name: /Expresso/ }))
 
-    // Add items in Pret a Manger page
-    rerender(wrapPage(StoreMenuPage, MOCK_PAGE_PROPS['Pret a Manger']))
-    await user.click(screen.getByRole('button', { name: /Iced Latte/ }))
+    // Add items in Burger King page
+    rerender(wrapPage(StoreMenuPage, BKPageProps))
+    await user.click(screen.getByRole('button', { name: /Chicken Royale/ }))
 
     // Cart page
     rerender(wrapPage(CartPage, {}))
 
-    const cappucinoEl = screen.getByRole('listitem', { name: /Cappucino/ })
+    const CappuccinoEl = screen.getByRole('listitem', { name: /Cappuccino/ })
 
     await user.click(
-      within(cappucinoEl).getByRole('button', { name: /remove item/i })
+      within(CappuccinoEl).getByRole('button', { name: /remove item/i })
     )
 
     await user.click(screen.getByRole('button', { name: /confirm remove/i }))
 
     // Target item removed
     expect(
-      screen.queryByRole('listitem', { name: /Cappucino/ })
+      screen.queryByRole('listitem', { name: /Cappuccino/ })
     ).not.toBeInTheDocument()
 
     // Remaining items should still be in the document
@@ -239,33 +225,32 @@ describe('Menu & Cart functionality', () => {
       screen.getByRole('listitem', { name: /Expresso/ })
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('listitem', { name: /Iced Latte/ })
+      screen.getByRole('listitem', { name: /Chicken Royale/ })
     ).toBeInTheDocument()
   })
   test(`Display correct subtotal value`, async () => {
     const user = userEvent.setup()
     // Add items in Starbucks page
-    const { rerender } = render(
-      wrapPage(StoreMenuPage, MOCK_PAGE_PROPS['Starbucks'])
-    )
+
+    const { rerender } = render(wrapPage(StoreMenuPage, StarbucksPageProps))
     // 2x Capuucino
-    await user.click(screen.getByRole('button', { name: /Cappucino/ }))
-    await user.click(screen.getByRole('button', { name: /Cappucino/ }))
+    await user.click(screen.getByRole('button', { name: /Cappuccino/ }))
+    await user.click(screen.getByRole('button', { name: /Cappuccino/ }))
     // 3x Expresso
     await user.click(screen.getByRole('button', { name: /Expresso/ }))
     await user.click(screen.getByRole('button', { name: /Expresso/ }))
     await user.click(screen.getByRole('button', { name: /Expresso/ }))
-    // Add items in Pret page
-    rerender(wrapPage(StoreMenuPage, MOCK_PAGE_PROPS['Pret a Manger']))
-    // 4x Iced Latte
-    await user.click(screen.getByRole('button', { name: /Iced Latte/ }))
-    await user.click(screen.getByRole('button', { name: /Iced Latte/ }))
-    await user.click(screen.getByRole('button', { name: /Iced Latte/ }))
-    await user.click(screen.getByRole('button', { name: /Iced Latte/ }))
+    // Add items in Burger King page
+    rerender(wrapPage(StoreMenuPage, BKPageProps))
+    // 4x Chicken Royale
+    await user.click(screen.getByRole('button', { name: /Chicken Royale/ }))
+    await user.click(screen.getByRole('button', { name: /Chicken Royale/ }))
+    await user.click(screen.getByRole('button', { name: /Chicken Royale/ }))
+    await user.click(screen.getByRole('button', { name: /Chicken Royale/ }))
 
     // Cart page
     rerender(wrapPage(CartPage, {}))
 
-    expect(screen.getByText(/Subtotal/i)).toHaveTextContent(/£33\.80/i)
+    expect(screen.getByText(/Subtotal/i)).toHaveTextContent(/£42\.96/i)
   })
 })

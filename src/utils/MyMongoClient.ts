@@ -1,44 +1,43 @@
-import { promises as fs } from 'fs'
+// import { MockMongoServer } from '@/__tests__/__mocks__/MockMongoServer'
 import { Db, MongoClient } from 'mongodb'
 
 export class MyMongoClient {
-  private static client: MongoClient
-  private static db: Db
+  private static client?: MongoClient
 
-  static async getDb() {
-    if (!this.db) {
+  static async getDb(): Promise<Db> {
+    if (!this.client) {
       await this.connect()
+      return this.getDb() // !! this may cause infinite loop. Make sure `this.connect` has indeed assigned this.client
     }
-    return this.db
+    // TODO: return diffferny DB name for each test to prevent clash?
+    return this.client.db('hangry-nextjs')
   }
 
   static async connect() {
-    this.client = await MongoClient.connect(getMongoClientURL())
-    this.db = this.client.db('hangry-nextjs')
-  }
-
-  static async resetDB() {
-    if (process.env.NODE_ENV !== 'test') {
-      throw new Error('Only allowed to reset DB in test environment!')
-    }
-
-    this.db.collection('stores').deleteMany({})
-    const dataBuffer = await fs.readFile('__tests__/__mocks__/mockDB.json')
-    const data = JSON.parse(dataBuffer.toString())
-    this.db.collection('stores').insertMany(data)
+    this.client = await getMongoClient()
   }
 
   static async disconnect() {
+    if (!this.client) {
+      throw Error('Client not initialised')
+    }
     await this.client.close()
   }
 }
 
-function getMongoClientURL(): string {
+async function getMongoClient(): Promise<MongoClient> {
   switch (process.env.NODE_ENV) {
-    case 'test':
-      return 'mongodb://127.0.0.1:27017'
+    case 'test': {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const {
+        MockMongoServer,
+      } = require('@/__tests__/__mocks__/MockMongoServer')
+      return MockMongoServer.client
+    }
     case 'development':
     case 'production':
-      return `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_PASSWORD}@cluster0.woa4fgk.mongodb.net/?retryWrites=true&w=majority`
+      return MongoClient.connect(
+        `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_PASSWORD}@cluster0.woa4fgk.mongodb.net/?retryWrites=true&w=majority`
+      )
   }
 }
