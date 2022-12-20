@@ -1,9 +1,12 @@
-const { PHASE_DEVELOPMENT_SERVER } = require('next/constants')
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+
+  // For using test database during build time
+  env: {
+    IS_TEST_BUILD: process.env.NODE_ENV === 'test',
+  },
 
   // SVGR
   webpack(config) {

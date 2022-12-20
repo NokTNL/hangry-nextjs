@@ -1,6 +1,5 @@
 import '@testing-library/jest-dom/extend-expect' // extending for jest-dom custom matchers
-import mockDB from '@/__tests__/mocks/mockDB'
-import { TextEncoder, TextDecoder } from 'util'
+import { TextDecoder, TextEncoder } from 'util'
 
 // MongoDB: Providing an implementation for TextEncoder & TextDecoder
 global.TextEncoder = TextEncoder
@@ -12,20 +11,18 @@ const { MockMongoServer } = require('./__tests__/mocks/MockMongoServer')
 
 beforeAll(async () => {
   await MockMongoServer.init()
-  /* Inject DB */
-  const db = await MyMongoClient.getDb()
-  await db.collection('stores').insertMany(mockDB)
 })
 
 beforeEach(async () => {
   localStorage.clear()
-  /* Reset DB */
-  const db = await MyMongoClient.getDb()
-  await db.collection('stores').deleteMany({})
-  await db.collection('stores').insertMany(mockDB)
+  await MockMongoServer.resetDB()
 })
 
 afterAll(async () => {
-  await MockMongoServer.client.close()
-  await MockMongoServer.server.stop()
+  if (MyMongoClient.client) {
+    await MyMongoClient.client.close()
+  }
+  if (MockMongoServer.server) {
+    await MockMongoServer.server.stop()
+  }
 })

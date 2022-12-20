@@ -1,32 +1,37 @@
 import { Db, MongoClient } from 'mongodb'
+import { MockMongoServer } from '@/__tests__/mocks/MockMongoServer'
+import { DB_NAME } from './constants'
 
 export class MyMongoClient {
-  private static client?: MongoClient
+  static client?: MongoClient
 
   static async getDb(): Promise<Db> {
     if (!this.client) {
-      this.client = await getMongoClient()
-      return this.getDb() // !! this may cause infinite loop. Make sure `this.connect` has indeed assigned this.client
+      await MyMongoClient.init()
     }
-
-    // TODO: return diffferny DB name for each test to prevent clash?
-    return this.client.db('hangry-nextjs')
+    if (!this.client) {
+      throw Error('client not initialised and failed to initialise one')
+    }
+    return this.client.db(DB_NAME)
   }
-}
-
-async function getMongoClient(): Promise<MongoClient> {
-  switch (process.env.NODE_ENV) {
-    case 'test': {
-      const {
-        MockMongoServer,
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-      } = require('@/__tests__/mocks/MockMongoServer')
-      return MockMongoServer.client
-    }
-    case 'development':
-    case 'production':
-      return MongoClient.connect(
+  static async init(): Promise<void> {
+    if (this.client) return
+    // Note: `process.env.NODE_ENV` is forced to === 'production' during collecting page data, so need to use a custom env variable here
+    if (!(process.env.IS_TEST_BUILD || process.env.NODE_ENV === 'test')) {
+      this.client = await MongoClient.connect(
         `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_PASSWORD}@cluster0.woa4fgk.mongodb.net/?retryWrites=true&w=majority`
       )
+      return
+    }
+    // Use mock MongoDB server & client
+    if (!MockMongoServer.server) {
+      await MockMongoServer.init()
+    }
+    if (!MockMongoServer.server) {
+      throw Error(
+        'mock MongoDB server not initialised and failed to initialise one'
+      )
+    }
+    this.client = await MongoClient.connect(MockMongoServer.server.getUri())
   }
 }

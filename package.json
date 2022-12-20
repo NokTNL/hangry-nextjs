@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --coverage --watchAll"
+    "test": "jest --coverage --watchAll",
+    "build:test": "export NODE_ENV=\"test\" && yarn build",
+    "start:test": "export NODE_ENV=\"test\" && yarn start"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.4.1",
