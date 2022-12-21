@@ -10,7 +10,8 @@
     "jest": "jest --coverage --watchAll",
     "build:test": "export NODE_ENV=\"test\" && yarn build",
     "start:test": "export NODE_ENV=\"test\" && yarn start",
-    "cypress": "cypress open"
+    "cypress": "cypress open",
+    "ci": "yarn build:test && start-server-and-test start:test http://localhost:3000 cypress"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.4.1",
@@ -43,6 +44,7 @@
     "react-dom": "18.2.0",
     "react-redux": "^8.0.5",
     "sharp": "^0.31.2",
+    "start-server-and-test": "^1.15.2",
     "typescript": "4.9.3",
     "zod": "^3.20.2"
   }
