@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    "baseUrl": ".", // For absolute path imports
+    "baseUrl": "../", // For absolute path imports
     "paths": {
       // For namespaced absolute path imports
       "@/*": ["*"]
     },
+    "types": ["jest", "@testing-library/jest-dom"],
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -19,7 +20,5 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true
-  },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "cypress", "__tests__"]
+  }
 }

@@ -1,13 +1,13 @@
 {
+  "$schema": "https://json.schemastore.org/eslintrc.json",
+
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:testing-library/react",
-    "plugin:jest-dom/recommended",
     "next/core-web-vitals"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "jest-dom", "testing-library"],
+  "plugins": ["@typescript-eslint"],
 
   "rules": {
     "@typescript-eslint/ban-ts-comment": 0,
@@ -21,5 +21,21 @@
     ]
   },
 
-  "ignorePatterns": ["**/*.config.js", "jest.setup.js"]
+  "ignorePatterns": ["**/*.config.js", "jest.setup.js"],
+
+  "overrides": [
+    {
+      "files": ["**/*.test.tsx", "**/*.test.js", "**/*.test.jsx"],
+      "extends": [
+        "plugin:testing-library/react",
+        "plugin:jest-dom/recommended"
+      ],
+      "plugins": ["jest-dom", "testing-library"]
+    },
+    {
+      "files": ["**/*.cy.ts", "**/*.cy.js"],
+      "plugins": ["cypress"],
+      "extends": ["plugin:cypress/recommended"]
+    }
+  ]
 }
