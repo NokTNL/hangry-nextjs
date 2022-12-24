@@ -30,8 +30,8 @@ export function AppWrapper({
         <DocumentHead />
 
         {/* Service Worker: only enabled for production */}
-        {/* Disabled for now for easier debugging */}
-        {/* {process.env.NODE_ENV === 'production' && <Script src="/setupSW.js" />} */}
+        {process.env.NODE_ENV === 'production' &&
+          !process.env.IS_TEST_BUILD && <Script src="/setupSW.js" />}
 
         {pageProps.hideAppHeader ?? <AppHeader />}
         {/* vvvv Page component will go to here */}
