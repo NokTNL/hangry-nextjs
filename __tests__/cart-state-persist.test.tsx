@@ -1,83 +1,47 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 // import { CartProvider } from './CartContext'
 // import { getContextDefaultValue, LOCAL_STORAGE_KEY } from './constants'
-import userEvent from '@testing-library/user-event'
+import CartPage from '@/pages/cart'
+import { LOCAL_STORAGE_KEY } from '@/src/store/constants'
 import { wrapPage } from '@/__tests__/mocks/utils'
-import StoreMenuPage from 'pages/stores/[storeId]'
-import { useContext } from 'react'
-import { CartContext } from '@/src/store/CartContext'
+import userEvent from '@testing-library/user-event'
+import StoreMenuPage, { getStaticProps } from 'pages/stores/[storeId]'
 
-// const MOCK_SOME_ITEMS_INIT_STATE = {
-//   items: [
-//     {
-//       store: {
-//         id: '1',
-//         name: 'Starbucks',
-//       },
-//       item: {
-//         id: 'item1',
-//         name: 'Cappucino',
-//         price: 3.5,
-//         photo: '/food-img-url-1',
-//       },
-//       quantity: 1,
-//     },
-//     {
-//       store: {
-//         id: '1',
-//         name: 'Starbucks',
-//       },
-//       item: {
-//         id: 'item2',
-//         name: 'Expresso',
-//         price: 3.5,
-//         photo: '/food-img-url-2',
-//       },
-//       quantity: 1,
-//     },
-//   ],
-// }
-const MOCK_PAGE_PROPS = {
-  Starbucks: {
-    storeId: '1',
-    storeName: 'Starbucks',
-    menu: [
-      {
+const MOCK_SOME_ITEMS_INIT_STATE = {
+  items: [
+    {
+      store: {
+        id: '1',
+        name: 'Starbucks',
+      },
+      item: {
         id: 'item1',
-        itemName: 'Cappucino',
+        name: 'Cappuccino',
         price: 3.5,
         photo: '/food-img-url-1',
       },
-      {
+      quantity: 2,
+    },
+    {
+      store: {
+        id: '1',
+        name: 'Starbucks',
+      },
+      item: {
         id: 'item2',
-        itemName: 'Expresso',
-        price: 2,
+        name: 'Expresso',
+        price: 3.5,
         photo: '/food-img-url-2',
       },
-    ],
-  },
-  'Pret a Manger': {
-    storeId: '2',
-    storeName: 'Pret a Manger',
-    menu: [
-      {
-        id: 'item3',
-        itemName: 'Iced Latte',
-        price: 5.2,
-        photo: '/food-img-url-3',
-      },
-    ],
-  },
+      quantity: 3,
+    },
+  ],
 }
 
-describe.skip('Cart State Storage', () => {
-  // TODO: This should better be tested in E2E, as you can't mock browser reopen and can't test properly without touchin implementation details
-  test.skip(`Cart state synced from local storage initially`, () => {
-    const spyContextValues = {
-      state: {
-        ...getContextDefaultValue().state,
-      },
-    }
+describe('Cart State Storage', () => {
+  test(`Cart state synced from local storage initially`, () => {
+    // Mocking/Spying directly on localStorage is NOT possible with jsdom: https://stackoverflow.com/a/54157998
+    // !!! BUT you can call localStorage directly in your test code!
 
     // Mocking that the local storage has been pre-populated with cart data
     localStorage.setItem(
@@ -85,33 +49,47 @@ describe.skip('Cart State Storage', () => {
       JSON.stringify(MOCK_SOME_ITEMS_INIT_STATE)
     )
 
-    render(<CartProvider spyContextValues={spyContextValues} />)
+    render(wrapPage(CartPage, {}))
 
-    expect(spyContextValues.state).toEqual(MOCK_SOME_ITEMS_INIT_STATE)
+    const StarbucksEl = screen.getByRole('listitem', { name: /Starbucks/ })
+    // Cappuccino
+    const CappuccinoEl = within(StarbucksEl).getByRole('listitem', {
+      name: /Cappuccino/,
+    })
+    expect(
+      within(CappuccinoEl).getByRole('spinbutton', { name: /quantity/i })
+    ).toHaveValue('2')
+    // Expresso
+    const ExpressoEl = within(StarbucksEl).getByRole('listitem', {
+      name: /Expresso/,
+    })
+    expect(
+      within(ExpressoEl).getByRole('spinbutton', { name: /quantity/i })
+    ).toHaveValue('3')
   })
 
-  test.skip(`Save cart state in local storage when adding items`, async () => {
-    // Mocking/Spying directly on localStorage is NOT possible with jsdom: https://stackoverflow.com/a/54157998
-    // !!! BUT you can call localStorage directly in your test code!
-    const spyContextValues = {
-      state: {
-        ...getContextDefaultValue().state,
-        items: [],
-      },
-    }
+  test(`Save cart state in local storage when adding items`, async () => {
+    const StarbucksPageProps = await getStaticProps({
+      params: { storeId: '111111111111111111111111' },
+    }).then(
+      // @ts-ignore
+      res => res.props
+    )
 
     const user = userEvent.setup()
 
-    render(
-      <CartProvider spyContextValues={spyContextValues}>
-        <StoreMenuPage {...MOCK_PAGE_PROPS_STARBUCKS} />
-      </CartProvider>
-    )
+    render(wrapPage(StoreMenuPage, StarbucksPageProps))
 
-    await user.click(screen.getByText(/Cappucino/))
+    await user.click(screen.getByRole('button', { name: /Cappuccino/ }))
+    await user.click(screen.getByRole('button', { name: /Cappuccino/ }))
 
-    expect(localStorage.getItem(LOCAL_STORAGE_KEY)).toEqual(
-      JSON.stringify(spyContextValues.state)
-    )
+    const localStorageCartItems = JSON.parse(
+      localStorage.getItem(LOCAL_STORAGE_KEY) ?? ''
+    ).items
+
+    expect(localStorageCartItems).toHaveLength(1)
+    expect(localStorageCartItems[0].store.name).toEqual('Starbucks')
+    expect(localStorageCartItems[0].item.name).toEqual('Cappuccino')
+    expect(localStorageCartItems[0].quantity).toEqual(2)
   })
 })

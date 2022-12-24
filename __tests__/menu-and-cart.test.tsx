@@ -51,7 +51,7 @@ describe('Menu & Cart functionality', () => {
     })
     expect(within(CappuccinoEl).getByRole('img')).toHaveAttribute(
       'src',
-      expect.stringMatching(/food-img-url-1/)
+      expect.stringMatching(/starbucks-cappuccino.jpeg/)
     )
     expect(within(CappuccinoEl).getByText(/£3\.50/)).toBeInTheDocument()
     expect(
@@ -105,7 +105,7 @@ describe('Menu & Cart functionality', () => {
     })
     expect(within(CappuccinoEl).getByRole('img')).toHaveAttribute(
       'src',
-      expect.stringMatching(/food-img-url-1/)
+      expect.stringMatching(/starbucks-cappuccino.jpeg/)
     )
     expect(within(CappuccinoEl).getByText(/£3\.50/)).toBeInTheDocument()
     expect(
@@ -118,7 +118,7 @@ describe('Menu & Cart functionality', () => {
     })
     expect(within(expressoEl).getByRole('img')).toHaveAttribute(
       'src',
-      expect.stringMatching(/food-img-url-2/)
+      expect.stringMatching(/starbucks-expresso.webp/)
     )
     expect(within(expressoEl).getByText(/£2\.00/)).toBeInTheDocument()
     expect(

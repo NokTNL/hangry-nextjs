@@ -28,11 +28,11 @@ describe('Store Menu Page', () => {
     // Item photos
     expect(within(capuccinoButton).getByRole('img')).toHaveAttribute(
       'src',
-      expect.stringMatching(/food-img-url-1.jpeg/)
+      expect.stringMatching(/starbucks-cappuccino.jpeg/)
     )
     expect(within(expressoButton).getByRole('img')).toHaveAttribute(
       'src',
-      expect.stringMatching(/food-img-url-2.webp/)
+      expect.stringMatching(/starbucks-expresso.webp/)
     )
     // Item prices
     expect(within(capuccinoButton).getByText(/£3\.50/)).toBeInTheDocument()
