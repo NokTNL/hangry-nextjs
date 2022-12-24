@@ -8,6 +8,9 @@ const nextConfig = {
     IS_TEST_BUILD: process.env.NODE_ENV === 'test',
   },
 
+  // Prevent next dev && next build clashes by using the same directory
+  distDir: process.env.NODE_ENV === 'development' ? '.next-dev' : '.next',
+
   // SVGR
   webpack(config) {
     config.module.rules.push({

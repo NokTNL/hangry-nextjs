@@ -226,4 +226,48 @@ describe('Menu to cart', () => {
 
     cy.findByText(/Subtotal/i).should('contain', '£42.96')
   })
+  it('Disallow checkout when there are no items added in the cart', () => {
+    cy.visit('/cart')
+    cy.findByRole('button', { name: /checkout/i }).should('be.disabled')
+  })
+  it('Checkout button leads to checkout page when items are present in the cart', () => {
+    cy.visit('/stores')
+
+    cy.findByRole('link', { name: /Starbucks/ }).click()
+    cy.findByRole('button', { name: /Expresso/ })
+      .click()
+      .click()
+    cy.go('back')
+
+    cy.findByRole('link', { name: /Burger King/ }).click()
+    cy.findByRole('button', { name: /Chicken Royale/ }).click()
+
+    cy.findByRole('link', { name: /cart/i }).click()
+
+    // Remove Chicken Royale, only Expresso left
+    cy.findByRole('listitem', { name: /Chicken Royale/ })
+      .findByRole('button', {
+        name: /remove/i,
+      })
+      .click()
+    cy.findByRole('button', { name: /confirm/i }).click()
+
+    cy.findByRole('button', { name: /checkout/i }).click()
+
+    cy.url().should('match', /checkout$/)
+  })
+  it('Checkout button disabled again if ALL items in the cart are later deleted', () => {
+    cy.visit('/stores')
+    cy.findByRole('link', { name: /Burger King/ }).click()
+    cy.findByRole('button', { name: /Chicken Royale/ }).click()
+    cy.findByRole('link', { name: /cart/i }).click()
+
+    cy.findByRole('listitem', { name: /Chicken Royale/ })
+      .findByRole('button', {
+        name: /remove/i,
+      })
+      .click()
+    cy.findByRole('button', { name: /confirm/i }).click()
+    cy.findByRole('button', { name: /checkout/i }).should('be.disabled')
+  })
 })

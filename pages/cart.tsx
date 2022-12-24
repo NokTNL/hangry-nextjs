@@ -1,9 +1,11 @@
-import { Flex, Heading, Spacer, Text, VStack } from '@chakra-ui/react'
 import { CartItem } from '@/src/components/cart/CartItem'
 import { useCart } from '@/src/store/CartContext'
 import { groupItemsByStore } from '@/src/utils/cart-utils'
+import { Button, Flex, Heading, Spacer, Text, VStack } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 
 export default function CartPage() {
+  const router = useRouter()
   const { state } = useCart()
 
   const subtotal = state.items.reduce(
@@ -57,6 +59,15 @@ export default function CartPage() {
           Subtotal:
           <Spacer as="span" />£{subtotal.toFixed(2)}
         </Flex>
+        <Button
+          colorScheme="teal"
+          disabled={groupedStores.length === 0}
+          onClick={() => {
+            router.push('/checkout')
+          }}
+        >
+          Checkout
+        </Button>
       </VStack>
     </main>
   )

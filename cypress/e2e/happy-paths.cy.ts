@@ -1,4 +1,4 @@
-describe('empty spec', () => {
+describe('Happy path', () => {
   it('Runs happy path (until shopping cart)', () => {
     // Stores pages
     cy.visit('/stores')
@@ -18,6 +18,6 @@ describe('empty spec', () => {
       .click()
     cy.findByRole('link', { name: /cart/i }).click()
     // Cart page
-    cy.findByText(/Subtotal:/i).contains(/£29\.97/i) // Remove this later
+    cy.findByRole('button', { name: /checkout/i }).click()
   })
 })
