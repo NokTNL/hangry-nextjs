@@ -44,11 +44,17 @@ export default function CheckoutPage() {
             listStyleType="none"
             title={store.store.name}
             key={store.store.id}
+            spacing="20px"
           >
             <Text as="span" color="gray.600" fontSize="20px" fontWeight="700">
               {store.store.name}
             </Text>
-            <VStack as="ul" alignItems="stretch" title="list of items">
+            <VStack
+              as="ul"
+              alignItems="stretch"
+              title="list of items"
+              spacing="20px"
+            >
               {store.items.map(item => (
                 <CheckoutItem
                   key={item.item.id}

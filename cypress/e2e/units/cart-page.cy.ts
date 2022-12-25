@@ -256,7 +256,7 @@ describe('Cart page', () => {
 
     cy.url().should('match', /checkout$/)
   })
-  it.only('Checkout button disabled again if ALL items in the cart are later deleted', () => {
+  it('Checkout button disabled again if ALL items in the cart are later deleted', () => {
     cy.visit('/stores')
     cy.findByRole('link', { name: /Burger King/ }).click()
     cy.findByRole('button', { name: /Chicken Royale/ }).click()
@@ -273,7 +273,7 @@ describe('Cart page', () => {
     cy.findByRole('button', { name: /confirm/i }).click()
     cy.findByRole('button', { name: /checkout/i }).should('be.disabled')
   })
-  it.only('Disallow checkout if any item has quantity = 0', () => {
+  it('Disallow checkout if any item has quantity = 0', () => {
     cy.visit('/stores')
 
     cy.findByRole('link', { name: /Starbucks/ }).click()

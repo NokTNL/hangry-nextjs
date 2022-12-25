@@ -28,7 +28,7 @@ describe('Checkout page', () => {
         cy.findByText(/x\s*1/).should('exist') // quantity
       })
   })
-  it('Display correct subototal', () => {
+  it('Display correct subtotal', () => {
     cy.findByText(/Subtotal/i).should('contain', '£11.49')
   })
   it('Disallow order submission when nothing in the form is filled in', () => {
@@ -37,6 +37,6 @@ describe('Checkout page', () => {
     cy.findByRole('textbox', { name: /Phone no\./i }).should('have.value', '')
     cy.findByRole('button', { name: /place order/i }).should('be.disabled')
   })
-  it.only('Validate phone number')
-  it.only('Validate email')
+  it('Validate phone number')
+  it('Validate email')
 })
