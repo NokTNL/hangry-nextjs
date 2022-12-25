@@ -1,4 +1,4 @@
-describe('Menu to cart', () => {
+describe('Cart page', () => {
   it(`Add one item, display the item's full details in the cart, quantity = 1`, () => {
     cy.visit('/stores')
     cy.findByRole('link', { name: /Starbucks/ }).click()
@@ -256,11 +256,14 @@ describe('Menu to cart', () => {
 
     cy.url().should('match', /checkout$/)
   })
-  it('Checkout button disabled again if ALL items in the cart are later deleted', () => {
+  it.only('Checkout button disabled again if ALL items in the cart are later deleted', () => {
     cy.visit('/stores')
     cy.findByRole('link', { name: /Burger King/ }).click()
     cy.findByRole('button', { name: /Chicken Royale/ }).click()
     cy.findByRole('link', { name: /cart/i }).click()
+
+    // Allowed at first
+    cy.findByRole('button', { name: /checkout/i }).should('not.be.disabled')
 
     cy.findByRole('listitem', { name: /Chicken Royale/ })
       .findByRole('button', {
@@ -268,6 +271,27 @@ describe('Menu to cart', () => {
       })
       .click()
     cy.findByRole('button', { name: /confirm/i }).click()
+    cy.findByRole('button', { name: /checkout/i }).should('be.disabled')
+  })
+  it.only('Disallow checkout if any item has quantity = 0', () => {
+    cy.visit('/stores')
+
+    cy.findByRole('link', { name: /Starbucks/ }).click()
+    cy.findByRole('button', { name: /Expresso/ }).click()
+    cy.go('back')
+    cy.findByRole('link', { name: /Burger King/ }).click()
+    cy.findByRole('button', { name: /Chicken Royale/ }).click()
+
+    cy.findByRole('link', { name: /cart/i }).click()
+
+    // Allowed at first
+    cy.findByRole('button', { name: /checkout/i }).should('not.be.disabled')
+
+    cy.findByRole('listitem', { name: /Expresso/ })
+      .findByRole('spinbutton', {
+        name: /quantity/i,
+      })
+      .clear() // quantity = 0
     cy.findByRole('button', { name: /checkout/i }).should('be.disabled')
   })
 })

@@ -91,7 +91,6 @@ export function CartItem({ item, store }: CartItemProps) {
                   aria-label="remove item"
                   onClick={() => setRemoveModalOpen(true)}
                 />
-                {/* TODO: add validation that items with 0 quantity cannot be checked out */}
                 <NumberInput
                   w="100px"
                   size="sm"

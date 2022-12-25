@@ -6,14 +6,18 @@ import { useRouter } from 'next/router'
 
 export default function CartPage() {
   const router = useRouter()
-  const { state } = useCart()
+  const {
+    state: { items },
+  } = useCart()
 
-  const subtotal = state.items.reduce(
+  const subtotal = items.reduce(
     (sum, item) => sum + item.item.price * item.quantity,
     0
   )
 
-  const groupedStores = groupItemsByStore(state.items)
+  const groupedStores = groupItemsByStore(items)
+  const isCheckoutDisabled =
+    groupedStores.length === 0 || items.some(item => item.quantity === 0)
 
   return (
     <main>
@@ -61,7 +65,7 @@ export default function CartPage() {
         </Flex>
         <Button
           colorScheme="teal"
-          disabled={groupedStores.length === 0}
+          disabled={isCheckoutDisabled}
           onClick={() => {
             router.push('/checkout')
           }}
