@@ -13,18 +13,41 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { useContext } from 'react'
+import { FocusEventHandler, useContext, useRef, useState } from 'react'
+
+enum refNames {
+  userName,
+  email,
+  phoneNumber,
+}
 
 export default function CheckoutPage() {
   const {
     state: { items },
   } = useContext(CartContext)
+  const inputRefs = [
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+  ]
+  const [isFormValid, setFormValid] = useState(false)
 
   const groupedStores = groupItemsByStore(items)
   const subtotal = items.reduce(
     (sum, item) => sum + item.item.price * item.quantity,
     0
   )
+  const handleInput: FocusEventHandler<HTMLInputElement> = () => {
+    if (inputRefs.every(refItem => refItem.current?.validity.valid)) {
+      setFormValid(true)
+    } else {
+      setFormValid(false)
+    }
+  }
+
+  const handleConfirm = () => {
+    console.log('confirmed')
+  }
 
   return (
     <main>
@@ -80,27 +103,49 @@ export default function CheckoutPage() {
         <VStack as="form">
           <FormControl isRequired>
             <FormLabel>Your name</FormLabel>
-            <Input type="text" />
+            <Input
+              type="text"
+              name="name"
+              onInput={handleInput}
+              ref={inputRefs[refNames.userName]}
+            />
           </FormControl>
           <FormControl isRequired>
             <FormLabel>Email</FormLabel>
-            <Input type="email" placeholder="example@email.com" />
+            <Input
+              type="email"
+              name="email"
+              placeholder="example@email.com"
+              onInput={handleInput}
+              ref={inputRefs[refNames.email]}
+            />
           </FormControl>
           <FormControl>
-            <FormLabel>Phone no.</FormLabel>
+            <FormLabel>
+              Phone no.{' '}
+              <Text as="span" fontSize="12px">
+                (optional)
+              </Text>
+            </FormLabel>
             <Input
               type="tel"
               placeholder="01234 567890"
-              maxLength={10}
-              pattern="[0-9]"
+              pattern="d"
+              onInput={handleInput}
+              ref={inputRefs[refNames.phoneNumber]}
             />
           </FormControl>
+          <Box py="40px" w="100%">
+            <Button
+              w="100%"
+              colorScheme="teal"
+              disabled={!isFormValid}
+              onClick={handleConfirm}
+            >
+              Place Order
+            </Button>
+          </Box>
         </VStack>
-        <Box py="20px">
-          <Button w="100%" colorScheme="teal" disabled>
-            Place Order
-          </Button>
-        </Box>
       </VStack>
     </main>
   )

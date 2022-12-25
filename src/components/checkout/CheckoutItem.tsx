@@ -7,7 +7,7 @@ type CheckoutItemProps = {
   store: CartItemType['store']
 }
 
-export function CheckoutItem({ item, store }: CheckoutItemProps) {
+export function CheckoutItem({ item }: CheckoutItemProps) {
   return (
     <>
       <Box as="li" title={item.item.name} listStyleType="none">
