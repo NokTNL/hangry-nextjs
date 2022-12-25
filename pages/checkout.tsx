@@ -4,6 +4,7 @@ import { groupItemsByStore } from '@/src/utils/cart-utils'
 import {
   Box,
   Button,
+  Checkbox,
   Flex,
   FormControl,
   FormLabel,
@@ -19,6 +20,7 @@ enum refNames {
   userName,
   email,
   phoneNumber,
+  tncCheckbox,
 }
 
 export default function CheckoutPage() {
@@ -26,6 +28,7 @@ export default function CheckoutPage() {
     state: { items },
   } = useContext(CartContext)
   const inputRefs = [
+    useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -100,7 +103,7 @@ export default function CheckoutPage() {
         >
           Your details
         </Heading>
-        <VStack as="form">
+        <VStack as="form" spacing="20px">
           <FormControl isRequired>
             <FormLabel>Your name</FormLabel>
             <Input
@@ -130,11 +133,22 @@ export default function CheckoutPage() {
             <Input
               type="tel"
               placeholder="01234 567890"
-              pattern="d"
+              pattern="\d+"
               onInput={handleInput}
               ref={inputRefs[refNames.phoneNumber]}
             />
           </FormControl>
+          <Checkbox
+            alignSelf="flex-start"
+            isRequired
+            onInput={handleInput}
+            ref={inputRefs[refNames.tncCheckbox]}
+          >
+            I agree to the Terms and Conditions{' '}
+            <Text as="span" color="red">
+              *
+            </Text>
+          </Checkbox>
           <Box py="40px" w="100%">
             <Button
               w="100%"

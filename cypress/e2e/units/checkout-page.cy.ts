@@ -35,16 +35,25 @@ describe('Checkout page', () => {
     cy.findByRole('textbox', { name: /Your name/i }).should('have.value', '')
     cy.findByRole('textbox', { name: /Email/i }).should('have.value', '')
     cy.findByRole('textbox', { name: /Phone no\./i }).should('have.value', '')
+    cy.findByRole('checkbox', { name: /Terms and Conditions/i }).should(
+      'not.be.checked'
+    )
     cy.findByRole('button', { name: /place order/i }).should('be.disabled')
   })
   it('Place order button enabled when all the required fields are filled', () => {
     cy.findByRole('textbox', { name: /Your name/i }).type('MY NAME 1234')
     cy.findByRole('textbox', { name: /Email/i }).type('abcde@email.com')
+    cy.findByRole('checkbox', { name: /Terms and Conditions/i }).check({
+      force: true,
+    })
     cy.findByRole('button', { name: /place order/i }).should('not.be.disabled')
   })
   it('Place order button disabled when required fields were filled and then erased', () => {
     cy.findByRole('textbox', { name: /Your name/i }).type('MY NAME 1234')
     cy.findByRole('textbox', { name: /Email/i }).type('abcde@email.com')
+    cy.findByRole('checkbox', { name: /Terms and Conditions/i }).check({
+      force: true,
+    })
     // Erasing one of the fields
     cy.findByRole('textbox', { name: /Email/i }).clear()
     cy.findByRole('button', { name: /place order/i }).should('be.disabled')
@@ -52,8 +61,16 @@ describe('Checkout page', () => {
     cy.findByRole('textbox', { name: /Email/i }).type('abcde@email.com')
     cy.findByRole('textbox', { name: /Your name/i }).clear()
     cy.findByRole('button', { name: /place order/i }).should('be.disabled')
-    // Fill in both again, then enabled again
-    cy.findByRole('textbox', { name: /Your name/i }).type('MY NAME 1234')
+    // Fill it back, try unchecking T&C checkbox
+    cy.findByRole('textbox', { name: /Your name/i }).type('Your NAME 456')
+    cy.findByRole('checkbox', { name: /Terms and Conditions/i }).uncheck({
+      force: true,
+    })
+    cy.findByRole('button', { name: /place order/i }).should('be.disabled')
+    // Check the checkbox again, then button enabled
+    cy.findByRole('checkbox', { name: /Terms and Conditions/i }).check({
+      force: true,
+    })
     cy.findByRole('button', { name: /place order/i }).should('not.be.disabled')
   })
   it('Optional field that has correct format does not enable placing order', () => {
@@ -65,13 +82,18 @@ describe('Checkout page', () => {
   it('Validate phone number format', () => {
     cy.findByRole('textbox', { name: /Your name/i }).type('MY NAME 1234')
     cy.findByRole('textbox', { name: /Email/i }).type('abcde@email.com')
-    cy.findByRole('button', { name: /place order/i }).should('not.be.disabled') // Valid, have all required fields
     cy.findByRole('textbox', { name: /Phone no\./i }).type('ABVD*&GIBU1') // Invalid phone number
+    cy.findByRole('checkbox', { name: /Terms and Conditions/i }).check({
+      force: true,
+    })
     cy.findByRole('button', { name: /place order/i }).should('be.disabled')
   })
   it('Validate email format', () => {
     cy.findByRole('textbox', { name: /Your name/i }).type('MY NAME 1234')
     cy.findByRole('textbox', { name: /Email/i }).type('12345.a.com') // Invalid email
+    cy.findByRole('checkbox', { name: /Terms and Conditions/i }).check({
+      force: true,
+    })
     cy.findByRole('button', { name: /place order/i }).should('be.disabled')
   })
 })
