@@ -16,12 +16,20 @@ import {
 } from '@chakra-ui/react'
 import { FocusEventHandler, useContext, useRef, useState } from 'react'
 
-enum refNames {
+const enum refNames {
   userName,
   email,
   phoneNumber,
   tncCheckbox,
 }
+
+// Alternatively, use:
+/* const refNames = {
+  userName: 0,
+  email: 1,
+  phoneNumber: 2,
+  tncCheckbox: 3,
+}  as const */
 
 export default function CheckoutPage() {
   const {
@@ -32,7 +40,7 @@ export default function CheckoutPage() {
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
-  ]
+  ] as const
   const [isFormValid, setFormValid] = useState(false)
 
   const groupedStores = groupItemsByStore(items)
