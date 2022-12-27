@@ -7,6 +7,7 @@ import {
   Checkbox,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Heading,
   Input,
@@ -14,50 +15,53 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { FocusEventHandler, useContext, useRef, useState } from 'react'
+import { createRef, useContext, useState } from 'react'
 
-const enum refNames {
-  userName,
-  email,
-  phoneNumber,
-  tncCheckbox,
+const inputNames = ['userName', 'email', 'phoneNumber', 'tncCheckbox'] as const
+/**
+ * Utility function for mapping an array of names to an object with the names as the keys
+ * @param fn the function that returns the desired property value
+ */
+function mapInputNamesToObj<V>(fn: (name: typeof inputNames[number]) => V) {
+  // The type definition of Object.fromEntries is not smart to know that the array passed in is a tuple
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  return Object.fromEntries(
+    inputNames.map(name => [name, fn(name)] as const)
+  ) as {
+    [Key in typeof inputNames[number]]: V
+  }
 }
-
-// Alternatively, use:
-/* const refNames = {
-  userName: 0,
-  email: 1,
-  phoneNumber: 2,
-  tncCheckbox: 3,
-}  as const */
 
 export default function CheckoutPage() {
   const {
     state: { items },
   } = useContext(CartContext)
-  const inputRefs = [
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-  ] as const
-  const [isFormValid, setFormValid] = useState(false)
+
+  const inputRefs = mapInputNamesToObj(() => createRef<HTMLInputElement>())
+  const [inputValidityStates, setInputValidityStates] = useState(
+    mapInputNamesToObj(() => true)
+  )
+  const [isPlacingOrder, setPlacingOrder] = useState(false)
 
   const groupedStores = groupItemsByStore(items)
   const subtotal = items.reduce(
     (sum, item) => sum + item.item.price * item.quantity,
     0
   )
-  const handleInput: FocusEventHandler<HTMLInputElement> = () => {
-    if (inputRefs.every(refItem => refItem.current?.validity.valid)) {
-      setFormValid(true)
-    } else {
-      setFormValid(false)
-    }
-  }
 
   const handleConfirm = () => {
-    console.log('confirmed')
+    const currentValidityStates = mapInputNamesToObj(
+      name => inputRefs[name].current?.validity.valid ?? false
+    )
+
+    setInputValidityStates(currentValidityStates)
+
+    const isWholeFormValid = inputNames.every(
+      input => currentValidityStates[input] === true
+    )
+    if (isWholeFormValid) {
+      setPlacingOrder(true)
+    }
   }
 
   return (
@@ -112,26 +116,23 @@ export default function CheckoutPage() {
           Your details
         </Heading>
         <VStack as="form" spacing="20px">
-          <FormControl isRequired>
+          <FormControl isRequired isInvalid={!inputValidityStates.userName}>
             <FormLabel>Your name</FormLabel>
-            <Input
-              type="text"
-              name="name"
-              onInput={handleInput}
-              ref={inputRefs[refNames.userName]}
-            />
+            <Input type="text" ref={inputRefs.userName} />
+            <FormErrorMessage>Your name is required</FormErrorMessage>
           </FormControl>
-          <FormControl isRequired>
+
+          <FormControl isRequired isInvalid={!inputValidityStates.email}>
             <FormLabel>Email</FormLabel>
             <Input
               type="email"
-              name="email"
+              ref={inputRefs.email}
               placeholder="example@email.com"
-              onInput={handleInput}
-              ref={inputRefs[refNames.email]}
             />
+            <FormErrorMessage>A valid email is required</FormErrorMessage>
           </FormControl>
-          <FormControl>
+
+          <FormControl isInvalid={!inputValidityStates.phoneNumber}>
             <FormLabel>
               Phone no.{' '}
               <Text as="span" fontSize="12px">
@@ -140,31 +141,34 @@ export default function CheckoutPage() {
             </FormLabel>
             <Input
               type="tel"
+              ref={inputRefs.phoneNumber}
               placeholder="01234 567890"
               pattern="\d+"
-              onInput={handleInput}
-              ref={inputRefs[refNames.phoneNumber]}
             />
+            <FormErrorMessage>The phone number must be valid</FormErrorMessage>
           </FormControl>
-          <Checkbox
-            alignSelf="flex-start"
-            isRequired
-            onInput={handleInput}
-            ref={inputRefs[refNames.tncCheckbox]}
-          >
-            I agree to the Terms and Conditions{' '}
-            <Text as="span" color="red">
-              *
-            </Text>
-          </Checkbox>
+
+          <Box w="100%">
+            <Checkbox isRequired ref={inputRefs.tncCheckbox}>
+              I agree to the Terms and Conditions{' '}
+              <Text as="span" color="red">
+                *
+              </Text>
+            </Checkbox>
+            {!inputValidityStates.tncCheckbox && (
+              <Text color="red.500" fontSize="14px" aria-live="polite">
+                You must agree to the Terms and Conditions
+              </Text>
+            )}
+          </Box>
           <Box py="40px" w="100%">
             <Button
               w="100%"
               colorScheme="teal"
-              disabled={!isFormValid}
               onClick={handleConfirm}
+              isDisabled={isPlacingOrder}
             >
-              Place Order
+              {isPlacingOrder ? 'Submitting order...' : 'Place Order'}
             </Button>
           </Box>
         </VStack>

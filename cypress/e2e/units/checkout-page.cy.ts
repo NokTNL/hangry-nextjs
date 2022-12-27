@@ -31,53 +31,107 @@ describe('Checkout page', () => {
   it('Display correct subtotal', () => {
     cy.findByText(/Subtotal/i).should('contain', '£11.49')
   })
-  it('Disallow order submission when nothing in the form is filled in', () => {
+  it('Initially has empty order form and no error messages', () => {
     cy.findByRole('textbox', { name: /Your name/i }).should('have.value', '')
     cy.findByRole('textbox', { name: /Email/i }).should('have.value', '')
     cy.findByRole('textbox', { name: /Phone no\./i }).should('have.value', '')
     cy.findByRole('checkbox', { name: /Terms and Conditions/i }).should(
       'not.be.checked'
     )
-    cy.findByRole('button', { name: /place order/i }).should('be.disabled')
+    // No error messages in the beginning
+    cy.get('[aria-live=polite]')
+      .invoke('text')
+      .should('not.match', /Your name is required/i)
+      .should('not.match', /A valid email is required/i)
+      .should('not.match', /The phone number must be valid/i)
+      .should('not.match', /You must agree to the Terms and Conditions/i)
   })
-  it('Place order button enabled when all the required fields are filled', () => {
+  it('Disallow order submission when nothing in the form is filled in', () => {
+    cy.findByRole('button', { name: /place order/i }).click()
+    // All required fields have error message
+    cy.get('[aria-live=polite]')
+      .invoke('text')
+      .should('match', /Your name is required/i)
+      .should('match', /A valid email is required/i)
+      .should('not.match', /The phone number must be valid/i) // Phone number is optional, so empty is okay
+      .should('match', /You must agree to the Terms and Conditions/i)
+    // Not submitting an order
+    cy.findByRole('button', { name: /submitting order/i }).should('not.exist')
+  })
+  it('Can place order when all the required fields are filled', () => {
     cy.findByRole('textbox', { name: /Your name/i }).type('MY NAME 1234')
     cy.findByRole('textbox', { name: /Email/i }).type('abcde@email.com')
     cy.findByRole('checkbox', { name: /Terms and Conditions/i }).check({
       force: true,
     })
-    cy.findByRole('button', { name: /place order/i }).should('not.be.disabled')
+    cy.findByRole('button', { name: /place order/i }).click()
+    cy.get('[aria-live=polite]')
+      .invoke('text')
+      .should('not.match', /Your name is required/i)
+      .should('not.match', /A valid email is required/i)
+      .should('not.match', /You must agree to the Terms and Conditions/i)
+    // Button changed to 'Submitting order...'
+    cy.findByRole('button', { name: /place order/i }).should('not.exist')
+    cy.findByRole('button', { name: /submitting order/i })
+      .should('exist')
+      .should('be.disabled')
   })
-  it('Place order button disabled when required fields were filled and then erased', () => {
+  it('Cannot place order when required fields when one of the field is missing', () => {
     cy.findByRole('textbox', { name: /Your name/i }).type('MY NAME 1234')
-    cy.findByRole('textbox', { name: /Email/i }).type('abcde@email.com')
+    // Email missing
     cy.findByRole('checkbox', { name: /Terms and Conditions/i }).check({
       force: true,
     })
-    // Erasing one of the fields
-    cy.findByRole('textbox', { name: /Email/i }).clear()
-    cy.findByRole('button', { name: /place order/i }).should('be.disabled')
-    // Fill it back, try erasing another field
+    cy.findByRole('button', { name: /place order/i }).click()
+    cy.get('[aria-live=polite]')
+      .invoke('text')
+      .should('not.match', /Your name is required/i)
+      .should('match', /A valid email is required/i)
+      .should('not.match', /You must agree to the Terms and Conditions/i)
+    // Fill email back, try clearing the name field
     cy.findByRole('textbox', { name: /Email/i }).type('abcde@email.com')
     cy.findByRole('textbox', { name: /Your name/i }).clear()
-    cy.findByRole('button', { name: /place order/i }).should('be.disabled')
-    // Fill it back, try unchecking T&C checkbox
+    cy.findByRole('button', { name: /place order/i }).click()
+    cy.get('[aria-live=polite]')
+      .invoke('text')
+      .should('match', /Your name is required/i)
+      .should('not.match', /A valid email is required/i)
+      .should('not.match', /You must agree to the Terms and Conditions/i)
+    // Fill the name back, try unchecking T&C checkbox
     cy.findByRole('textbox', { name: /Your name/i }).type('Your NAME 456')
     cy.findByRole('checkbox', { name: /Terms and Conditions/i }).uncheck({
       force: true,
     })
-    cy.findByRole('button', { name: /place order/i }).should('be.disabled')
-    // Check the checkbox again, then button enabled
+    cy.findByRole('button', { name: /place order/i }).click()
+    cy.get('[aria-live=polite]')
+      .invoke('text')
+      .should('not.match', /Your name is required/i)
+      .should('not.match', /A valid email is required/i)
+      .should('match', /You must agree to the Terms and Conditions/i)
+    // Check the checkbox again, then an order can be placed
     cy.findByRole('checkbox', { name: /Terms and Conditions/i }).check({
       force: true,
     })
-    cy.findByRole('button', { name: /place order/i }).should('not.be.disabled')
+    cy.findByRole('button', { name: /place order/i }).click()
+    cy.get('[aria-live=polite]')
+      .invoke('text')
+      .should('not.match', /Your name is required/i)
+      .should('not.match', /A valid email is required/i)
+      .should('not.match', /You must agree to the Terms and Conditions/i)
+    cy.findByRole('button', { name: /place order/i }).should('not.exist')
+    cy.findByRole('button', { name: /submitting order/i })
+      .should('exist')
+      .should('be.disabled')
   })
   it('Optional field that has correct format does not enable placing order', () => {
     cy.findByRole('textbox', { name: /Your name/i }).type('MY NAME 1234')
     // Email missing
     cy.findByRole('textbox', { name: /Phone no\./i }).type('123455678') // Optional field
-    cy.findByRole('button', { name: /place order/i }).should('be.disabled')
+    cy.findByRole('checkbox', { name: /Terms and Conditions/i }).check({
+      force: true,
+    })
+    cy.findByRole('button', { name: /place order/i }).click()
+    cy.findByRole('button', { name: /submitting order/i }).should('not.exist')
   })
   it('Validate phone number format', () => {
     cy.findByRole('textbox', { name: /Your name/i }).type('MY NAME 1234')
@@ -86,7 +140,8 @@ describe('Checkout page', () => {
     cy.findByRole('checkbox', { name: /Terms and Conditions/i }).check({
       force: true,
     })
-    cy.findByRole('button', { name: /place order/i }).should('be.disabled')
+    cy.findByRole('button', { name: /place order/i }).click()
+    cy.findByRole('button', { name: /submitting order/i }).should('not.exist')
   })
   it('Validate email format', () => {
     cy.findByRole('textbox', { name: /Your name/i }).type('MY NAME 1234')
@@ -94,6 +149,7 @@ describe('Checkout page', () => {
     cy.findByRole('checkbox', { name: /Terms and Conditions/i }).check({
       force: true,
     })
-    cy.findByRole('button', { name: /place order/i }).should('be.disabled')
+    cy.findByRole('button', { name: /place order/i }).click()
+    cy.findByRole('button', { name: /submitting order/i }).should('not.exist')
   })
 })
