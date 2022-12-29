@@ -1,30 +1,23 @@
 import { defineConfig } from 'cypress'
-import { MyMongoClient } from './src/utils/MyMongoClient'
-import { MockMongoServer } from './__tests__/mocks/MockMongoServer'
+// import { MockMongoServer } from './__tests__/mocks/MockMongoServer.mjs'
 
 export default defineConfig({
   e2e: {
-    setupNodeEvents(on, config) {
-      on('before:spec', async () => {
-        await MockMongoServer.init()
-      })
-      on('task', {
-        'db:reset': async () => {
-          await MockMongoServer.resetDB()
-          return null // Cypress requires returning a value/null to indicate the task has been handled properly
-        },
-      })
-      on('after:run', async () => {
-        if (MyMongoClient.client) {
-          await MyMongoClient.client.close()
-        }
-        if (MockMongoServer.server) {
-          await MockMongoServer.server.stop()
-        }
-      })
-    },
-    baseUrl: 'http://localhost:3000',
+    // TODO: add this back and add in spec
+    // setupNodeEvents(on, config) {
+    //   on('task', {
+    //     'db:reset': async () => {
+    //       await MockMongoServer.resetDB()
+    //       return null // Cypress requires returning a value/null to indicate the task has been handled properly
+    //     },
+    //   })
+    // },
+    baseUrl:
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:4000'
+        : 'http://localhost:3000',
     experimentalRunAllSpecs: true,
   },
   experimentalInteractiveRunEvents: true, // To enable listening to the `before:*` or `after:*` events when running `cypress open`. See https://docs.cypress.io/api/plugins/before-run-api
+  defaultCommandTimeout: process.env.NODE_ENV === 'development' ? 10000 : 4000,
 })

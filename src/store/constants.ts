@@ -1,12 +1,12 @@
-import { StoreMenuItemType } from '../models/db'
+import { StoreMenuItemType, StoreType } from '../models/db'
 
 /**
  * Types
  */
 export type CartItemType = {
   store: {
-    id: string
-    name: string
+    id: StoreType['id']
+    name: StoreType['name']
   }
   item: Omit<StoreMenuItemType, 'itemName'> & {
     name: StoreMenuItemType['itemName']

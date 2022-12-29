@@ -1,8 +1,8 @@
 import { ObjectID } from 'bson'
 
-export default [
+const db = [
   {
-    _id: ObjectID('111111111111111111111111'),
+    _id: new ObjectID('111111111111111111111111'),
     logoImage: '/img/starbucks.svg',
     name: 'Starbucks',
     menu: [
@@ -21,7 +21,7 @@ export default [
     ],
   },
   {
-    _id: ObjectID('222222222222222222222222'),
+    _id: new ObjectID('222222222222222222222222'),
     logoImage: '/img/burger-king.svg',
     name: 'Burger King',
     menu: [
@@ -34,9 +34,17 @@ export default [
     ],
   },
   {
-    _id: ObjectID('333333333333333333333333'),
+    _id: new ObjectID('333333333333333333333333'),
     logoImage: '/img/mcdonalds.svg',
     name: 'McDonalds',
     menu: [],
   },
+  {
+    _id: new ObjectID('444444444444444444444444'),
+    logoImage: '/img/mcdonalds.svg',
+    name: 'TEST DATABASE STORE',
+    menu: [],
+  },
 ]
+
+export default db

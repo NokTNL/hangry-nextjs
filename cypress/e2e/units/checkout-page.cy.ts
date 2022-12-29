@@ -14,7 +14,7 @@ describe('Checkout page', () => {
 
     cy.findByRole('button', { name: /checkout/i }).click()
   })
-  it('Shows all items currently in the cart', () => {
+  it('Shows all items currently in the cart & correct subtotal', () => {
     cy.findByRole('listitem', { name: /Starbucks/ })
       .findByRole('listitem', { name: /Expresso/ })
       .within($item => {
@@ -27,8 +27,6 @@ describe('Checkout page', () => {
         cy.findByText(/£7\.49/).should('exist') // price
         cy.findByText(/x\s*1/).should('exist') // quantity
       })
-  })
-  it('Display correct subtotal', () => {
     cy.findByText(/Subtotal/i).should('contain', '£11.49')
   })
   it('Initially has empty order form and no error messages', () => {

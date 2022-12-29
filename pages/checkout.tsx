@@ -15,6 +15,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 import { createRef, useContext, useState } from 'react'
 
 const inputNames = ['userName', 'email', 'phoneNumber', 'tncCheckbox'] as const
@@ -23,7 +24,7 @@ const inputNames = ['userName', 'email', 'phoneNumber', 'tncCheckbox'] as const
  * @param fn the function that returns the desired property value
  */
 function mapInputNamesToObj<V>(fn: (name: typeof inputNames[number]) => V) {
-  // The type definition of Object.fromEntries is not smart to know that the array passed in is a tuple
+  // The type definition of Object.fromEntries is not smart enough to know that the array passed in is a tuple
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   return Object.fromEntries(
     inputNames.map(name => [name, fn(name)] as const)
@@ -33,6 +34,7 @@ function mapInputNamesToObj<V>(fn: (name: typeof inputNames[number]) => V) {
 }
 
 export default function CheckoutPage() {
+  const router = useRouter()
   const {
     state: { items },
   } = useContext(CartContext)
@@ -49,7 +51,7 @@ export default function CheckoutPage() {
     0
   )
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     const currentValidityStates = mapInputNamesToObj(
       name => inputRefs[name].current?.validity.valid ?? false
     )
@@ -62,6 +64,15 @@ export default function CheckoutPage() {
     if (isWholeFormValid) {
       setPlacingOrder(true)
     }
+
+    const response = await fetch('/api/transaction', {
+      method: 'POST',
+      body: JSON.stringify({ details: groupedStores, subtotal: subtotal }),
+    }).then(res => res.json())
+
+    const txId = response.txId
+
+    router.replace(`/transaction-done/${txId}`)
   }
 
   return (
