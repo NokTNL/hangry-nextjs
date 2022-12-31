@@ -82,7 +82,7 @@ export default function CheckoutPage() {
 
       const txId = response.txId
 
-      router.replace(`/transaction-done/${txId}`)
+      await router.replace(`/transaction-done/${txId}`)
       cartDispatch({ type: 'CLEAR_CART' })
     } catch (err) {
       console.error(err)
