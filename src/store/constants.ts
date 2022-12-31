@@ -45,6 +45,7 @@ export type CartActionTypes =
         item: CartItemType['item']
       }
     }
+  | { type: 'CLEAR_CART' }
 
 /**
  * Constants

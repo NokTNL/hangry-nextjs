@@ -114,6 +114,10 @@ export function cartReducer(
       )
       break
     }
+    case 'CLEAR_CART': {
+      newState = { items: [] }
+      break
+    }
   }
 
   // Sync with Local Storage

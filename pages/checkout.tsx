@@ -37,6 +37,7 @@ export default function CheckoutPage() {
   const router = useRouter()
   const {
     state: { items },
+    dispatch: cartDispatch,
   } = useContext(CartContext)
 
   const inputRefs = mapInputNamesToObj(() => createRef<HTMLInputElement>())
@@ -52,27 +53,41 @@ export default function CheckoutPage() {
   )
 
   const handleConfirm = async () => {
-    const currentValidityStates = mapInputNamesToObj(
-      name => inputRefs[name].current?.validity.valid ?? false
-    )
+    try {
+      const currentValidityStates = mapInputNamesToObj(
+        name => inputRefs[name].current?.validity.valid ?? false
+      )
 
-    setInputValidityStates(currentValidityStates)
+      setInputValidityStates(currentValidityStates)
 
-    const isWholeFormValid = inputNames.every(
-      input => currentValidityStates[input] === true
-    )
-    if (isWholeFormValid) {
+      const isWholeFormValid = inputNames.every(
+        input => currentValidityStates[input] === true
+      )
+      if (!isWholeFormValid) {
+        return
+      }
+
+      // The whole form is valid
       setPlacingOrder(true)
+
+      const response = await fetch('/api/transaction', {
+        method: 'POST',
+        body: JSON.stringify({ details: groupedStores, subtotal: subtotal }),
+      }).then(res => {
+        if (!res.ok) {
+          throw Error(`Responded with status ${res.status}`)
+        }
+        return res.json()
+      })
+
+      const txId = response.txId
+
+      router.replace(`/transaction-done/${txId}`)
+      cartDispatch({ type: 'CLEAR_CART' })
+    } catch (err) {
+      console.error(err)
+      router.push(`/transaction-error`)
     }
-
-    const response = await fetch('/api/transaction', {
-      method: 'POST',
-      body: JSON.stringify({ details: groupedStores, subtotal: subtotal }),
-    }).then(res => res.json())
-
-    const txId = response.txId
-
-    router.replace(`/transaction-done/${txId}`)
   }
 
   return (

@@ -20,4 +20,5 @@ export default defineConfig({
   },
   experimentalInteractiveRunEvents: true, // To enable listening to the `before:*` or `after:*` events when running `cypress open`. See https://docs.cypress.io/api/plugins/before-run-api
   defaultCommandTimeout: process.env.NODE_ENV === 'development' ? 10000 : 4000,
+  viewportWidth: 375,
 })

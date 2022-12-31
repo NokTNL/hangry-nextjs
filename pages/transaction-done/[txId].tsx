@@ -3,6 +3,7 @@ import { CheckoutItem } from '@/src/components/checkout/CheckoutItem'
 import { Transaction, transactionSchema } from '@/src/models/db'
 import { MyMongoClient } from '@/src/utils/MyMongoClient'
 import {
+  Button,
   Flex,
   Heading,
   HStack,
@@ -13,6 +14,7 @@ import {
 } from '@chakra-ui/react'
 import { ObjectId } from 'mongodb'
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
+import Link from 'next/link'
 
 type TxDoneParams = {
   txId: string
@@ -104,6 +106,9 @@ export default function TxDonePage({ transaction }: TxDonePageProps) {
           Subtotal:
           <Spacer as="span" />£{subtotal.toFixed(2)}
         </Flex>
+        <Button as={Link} href="/stores">
+          Go back to stores
+        </Button>
       </VStack>
     </main>
   )

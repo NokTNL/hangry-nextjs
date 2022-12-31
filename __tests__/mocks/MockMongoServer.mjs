@@ -3,7 +3,17 @@ import { MongoMemoryServer } from 'mongodb-memory-server'
 import mockDB from './mockDB.mjs'
 
 export async function createMongoServer() {
-  const serverInstance = await MongoMemoryServer.create()
+  const serverInstance = await MongoMemoryServer.create({
+    // Fix the port number so that build:test & start:test uses the same Mongo URI
+    instance: {
+      port:
+        process.env.NODE_ENV === 'development'
+          ? 50000
+          : process.env.NODE_ENV === 'test' || process.env.IS_TEST_BUILD
+          ? 60000
+          : null,
+    },
+  })
 
   /* Inject DB */
   const dataInjectionClient = await MongoClient.connect(serverInstance.getUri())

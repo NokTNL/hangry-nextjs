@@ -190,7 +190,7 @@ describe('Cart page', () => {
       .findByRole('button', {
         name: /remove/i,
       })
-      .click({ force: true })
+      .click({})
     cy.findByRole('button', { name: /confirm/i }).click()
 
     // Reload, should still reflect the last cart state

@@ -43,6 +43,8 @@ export function MenuItem({ item, storeDetails }: MenuItemProps) {
       position: 'bottom-right',
       status: 'success',
       description: `${item.itemName} added to cart`,
+      // Make animation disappears quickly, as sometimes it can block buttons from being clicked
+      duration: process.env.IS_TEST_BUILD ? 100 : 5000,
     })
   }
   return (

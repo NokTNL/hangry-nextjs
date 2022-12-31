@@ -15,9 +15,11 @@ export class MyMongoClient {
   static async init(): Promise<void> {
     if (this.client) return
 
-    if (!(process.env.IS_TEST_BUILD || process.env.NODE_ENV === 'test')) {
+    if (
+      !(process.env.NODE_ENV === 'development' || process.env.IS_TEST_BUILD)
+    ) {
       this.client = await MongoClient.connect(
-        `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_PASSWORD}@cluster0.woa4fgk.mongodb.net/?retryWrites=true&w=majority`
+        `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_PASSWORD}@${process.env.CLUSTER_NAME}/?retryWrites=true&w=majority`
       )
       return
     }

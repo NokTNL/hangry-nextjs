@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "jest": "jest --coverage --watchAll",
-    "build:test": "export NODE_ENV=\"test\" && yarn build",
-    "start:test": "export NODE_ENV=\"test\" && yarn start",
+    "build:test": "NODE_ENV=test yarn build",
+    "start:test": "NODE_ENV=test yarn start",
     "cypress:start": "start-server-and-test start:test 3000 'cypress open'",
     "cypress:build": "yarn build:test && yarn cypress:start",
     "cypress:dev": "NODE_ENV=development cypress open"

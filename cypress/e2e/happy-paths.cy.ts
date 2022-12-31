@@ -1,4 +1,5 @@
 describe('Happy path', () => {
+  // TODO: finish the happy path
   it('Runs happy path (until shopping cart)', () => {
     // Stores pages
     cy.visit('/stores')

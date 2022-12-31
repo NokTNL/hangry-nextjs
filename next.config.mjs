@@ -1,14 +1,13 @@
 import { createMongoServer } from './__tests__/mocks/MockMongoServer.mjs'
 
-const isTestBuild =
-  process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development'
-
 /** @type {string | undefined} */
 let mockMongoServerUri
-if (isTestBuild) {
+if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development') {
   const mockServer = await createMongoServer()
   // global.MOCK_MONGO_SERVER = mockServer
   mockMongoServerUri = mockServer.getUri()
+  // eslint-disable-next-line no-console
+  console.log(`MongoDB Memory Server started at ${mockMongoServerUri}`)
 }
 
 /** @type {import('next').NextConfig} */
@@ -16,9 +15,9 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
 
-  // Note: `process.env.NODE_ENV` is forced to === 'production' during collecting page data in `next build`, and === 'developement' when running `next dev` , so need to define a custom env variable here for use in next dev & build:test
+  // Note: `process.env.NODE_ENV` from command line is only used in this file and not transmitted down when doing page build. It is forced to === 'production' in `next build`, and === 'developement' when running `next dev`. Need to define a custom env variable here to transmit that information
   env: {
-    IS_TEST_BUILD: isTestBuild,
+    IS_TEST_BUILD: process.env.NODE_ENV === 'test',
     MOCK_MONGODB_SERVER_URI: mockMongoServerUri,
   },
 

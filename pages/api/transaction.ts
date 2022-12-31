@@ -7,6 +7,7 @@ export default async function transactionHandler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
+    // TODO: check items array is not empty, possibly in the chekcout page as well
     const reqBody = JSON.parse(req.body)
 
     const typedBody = transactionSchema.omit({ id: true }).parse(reqBody)
